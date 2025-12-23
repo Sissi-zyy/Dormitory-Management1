@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>宿舍管理系统 - 访客登记</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700&display=swap">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Noto Sans SC', sans-serif;
+      background-color: #f5f7fa;
+      color: #333;
+      line-height: 1.6;
+    }
+
+    .container {
+      display: flex;
+      min-height: 100vh;
+    }
+
+    /* 侧边栏样式 */
+    .sidebar {
+      width: 240px;
+      background: linear-gradient(180deg, #1e3c72 0%, #2a5298 100%);
+      color: white;
+      padding: 20px 0;
+      box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+      z-index: 100;
+    }
+
+    .logo-area {
+      padding: 0 20px 30px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      font-size: 20px;
+      font-weight: 700;
+      margin-bottom: 10px;
+    }
+
+    .logo i {
+      margin-right: 12px;
+      font-size: 24px;
+    }
+
+    .campus-info {
+      font-size: 12px;
+      opacity: 0.8;
+      padding-left: 36px;
+    }
+
+    .nav-links {
+      list-style: none;
+      padding: 20px 0;
+    }
+
+    .nav-links li {
+      margin: 5px 0;
+    }
+
+    .nav-links a {
+      display: flex;
+      align-items: center;
+      padding: 12px 20px;
+      color: rgba(255, 255, 255, 0.8);
+      text-decoration: none;
+      transition: all 0.3s;
+      border-left: 4px solid transparent;
+    }
+
+    .nav-links a:hover,
+    .nav-links a.active {
+      background: rgba(255, 255, 255, 0.1);
+      color: white;
+      border-left-color: #4CAF50;
+    }
+
+    .nav-links i {
+      width: 24px;
+      margin-right: 12px;
+      font-size: 16px;
+    }
+
+    /* 主要内容区域 */
+    .main-content {
+      flex: 1;
+      padding: 20px;
+      overflow-y: auto;
+    }
+
+    /* 头部样式 */
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 30px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid #e0e6ef;
+    }
+
+    .header-title h1 {
+      font-size: 28px;
+      color: #2c3e50;
+      margin-bottom: 5px;
+    }
+
+    .header-title p {
+      color: #7f8c8d;
+      font-size: 14px;
+    }
+
+    .header-controls {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .search-bar {
+      position: relative;
+      background: white;
+      border-radius: 25px;
+      padding: 8px 15px 8px 40px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+      border: 1px solid #e0e6ef;
+    }
+
+    .search-bar i {
+      position: absolute;
+      left: 15px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #95a5a6;
+    }
+
+    .search-bar input {
+      border: none;
+      outline: none;
+      width: 200px;
+      background: transparent;
+    }
+
+    .user-info {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <aside class="sidebar">
+      <div class="logo-area">
+        <div class="logo">
+          <i class="fas fa-hotel"></i>
+          <span>宿舍管理系统</span>
+        </div>
+        <div class="campus-info">四川工商学院学生宿舍管理中心</div>
+      </div>
+      <ul class="nav-links">
+        <li><a href="index.html"><i class="fas fa-home"></i><span>系统首页</span></a></li>
+        <li><a href="dorm-management.html"><i class="fas fa-building"></i><span>宿舍楼管理</span></a></li>
+        <li><a href="student.html"><i class="fas fa-user-friends"></i><span>住宿学生</span></a></li>
+        <li><a href="bed-assignment.html"><i class="fas fa-bed"></i><span>床位分配</span></a></li>
+        <li><a href="repair.html"><i class="fas fa-tools"></i><span>报修管理</span></a></li>
+        <li><a href="visitor.html"><i class="fas fa-user-check"></i><span>访客登记</span></a></li>
+        <li><a href="statistics.html"><i class="fas fa-chart-bar"></i><span>数据统计</span></a></li>
+        <li><a href="settings.html"><i class="fas fa-cog"></i><span>系统设置</span></a></li>
+      </ul>
+    </aside>
+
+    <main class="main-content">
+      <header>
+        <div class="header-title">
+          <h1>访客登记管理</h1>
+          <p>访客信息登记、查询和状态跟踪</p>
+        </div>
+        <div class="header-controls">
+          <div class="search-bar">
+            <i class="fas fa-search"></i>
+            <input type="text" placeholder="搜索访客或学生...">
+          </div>
+          <div class="user-info">
+            <div class="user-avatar">
+              <i class="fas fa-user-tie"></i>
+            </div>
+            <div class="user-details">
+              <h3>李管理员</h3>
+              <p>宿舍管理中心</p>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <div class="today-stats">
+        <div class="stat-card">
+          <div class="stat-number">67</div>
+          <div class="stat-label">今日访客</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number">12</div>
+          <div class="stat-label">访问中</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number">55</div>
+          <div class="stat-label">已离开</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number">3</div>
+          <div class="stat-label">未登记</div>
+        </div>
+      </div>
+
+      <div class="action-buttons" style="margin-bottom: 20px;">
+        <button class="btn btn-primary" onclick="quickRegister()">
+          <i class="fas fa-user-plus"></i> 快速登记
+        </button>
+        <button class="btn btn-success" onclick="scanIDCard()">
+          <i class="fas fa-id-card"></i> 扫描身份证
+        </button>
+        <button class="btn btn-warning" onclick="exportVisitorData()">
+          <i class="fas fa-file-export"></i> 导出记录
+        </button>
+        <button class="btn btn-danger" onclick="showBlacklist()">
+          <i class="fas fa-ban"></i> 黑名单管理
+        </button>
+      </div>
+
+      <div class="visitor-container">
+        <div class="registration-form">
+          <h3><i class="fas fa-edit"></i> 访客登记</h3>
+
+          <div class="form-group">
+            <label>访客姓名 *</label>
+            <input type="text" class="form-control" id="visitorName" placeholder="请输入姓名">
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label>证件类型</label>
+              <select class="form-control" id="idType">
+                <option value="idcard">身份证</option>
+                <option value="passport">护照</option>
+                <option value="driver">驾驶证</option>
+                <option value="other">其他</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>证件号码</label>
+              <input type="text" class="form-control" id="idNumber" placeholder="证件号码">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>联系电话 *</label>
+            <input type="text" class="form-control" id="visitorPhone" placeholder="联系电话">
+          </div>
+
+          <div class="form-group">
+            <label>访问事由</label>
+            <select class="form-control" id="visitReason">
+              <option value="family">家属探访</option>
+              <option value="friend">朋友拜访</option>
+              <option value="business">公务</option>
+              <option value="delivery">送货</option>
+              <option value="other">其他</option>
+            </select>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label>访问学生 *</label>
+              <input type="text" class="form-control" id="studentName" placeholder="学生姓名">
+            </div>
+            <div class="form-group">
+              <label>学号</label>
+              <input type="text" class="form-control" id="studentId" placeholder="学号">
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label>宿舍楼 *</label>
+              <select class="form-control" id="dormBuilding">
+                <option value="">选择楼栋</option>
+                <option value="1">1号楼（男生）</option>
+                <option value="2">2号楼（女生）</option>
+                <option value="3">3号楼（男生）</option>
+                <option value="4">4号楼（女生）</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>房间号 *</label>
+              <input type="text" class="form-control" id="roomNumber" placeholder="如：408">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>预计离开时间</label>
+            <input type="time" class="form-control" id="expectedLeaveTime" value="18:00">
+          </div>
+
+          <div class="form-group">
+            <label>备注信息</label>
+            <textarea class="form-control" id="visitNotes" rows="2" placeholder="其他备注信息..."></textarea>
+          </div>
+
+          <button class="btn btn-primary btn-block" onclick="registerVisitor()">
+            <i class="fas fa-check"></i> 提交登记
+          </button>
+
+          <div class="qr-scanner" onclick="openQRScanner()">
+            <i class="fas fa-qrcode" style="font-size: 40px; color: #64748b; margin-bottom: 10px;"></i>
+            <p>点击扫描访客二维码</p>
+            <small style="color: #94a3b8;">支持身份证、学生证二维码扫描</small>
+          </div>
+        </div>
+
+        <div class="visitor-list">
+          <h3><i class="fas fa-list"></i> 今日访客记录</h3>
+
+          <div class="filter-options" style="margin: 15px 0;">
+            <button class="filter-btn active" onclick="filterVisitors('all')">全部</button>
+            <button class="filter-btn" onclick="filterVisitors('active')">访问中</button>
+            <button class="filter-btn" onclick="filterVisitors('completed')">已离开</button>
+            <button class="filter-btn" onclick="filterVisitors('today')">今日</button>
+            <button class="filter-btn" onclick="filterVisitors('recent')">最近3天</button>
+          </div>
+
+          <div id="visitorRecords">
+            <div class="visitor-card active">
+              <div class="visitor-header">
+                <div class="visitor-name">王先生</div>
+                <span class="status status-processing">访问中</span>
+              </div>
+              <div class="visitor-meta">
+                <div><strong>访问学生：</strong>张明</div>
+                <div><strong>宿舍：</strong>3号楼-408</div>
+                <div><strong>进入时间：</strong>09:30</div>
+              </div>
+              <div class="visitor-actions">
+                <button class="btn btn-success btn-sm" onclick="checkOutVisitor(1)">确认离开</button>
+                <button class="btn btn-warning btn-sm" onclick="extendVisit(1)">延长访问</button>
+                <button class="btn btn-primary btn-sm" onclick="viewVisitorDetails(1)">详情</button>
+              </div>
+            </div>
+
+            <div class="visitor-card active">
+              <div class="visitor-header">
+                <div class="visitor-name">李女士</div>
+                <span class="status status-processing">访问中</span>
+              </div>
+              <div class="visitor-meta">
+                <div><strong>访问学生：</strong>王丽</div>
+                <div><strong>宿舍：</strong>2号楼-512</div>
+                <div><strong>进入时间：</strong>10:15</div>
+              </div>
+              <div class="visitor-actions">
+                <button class="btn btn-success btn-sm" onclick="checkOutVisitor(2)">确认离开</button>
+                <button class="btn btn-warning btn-sm" onclick="extendVisit(2)">延长访问</button>
+                <button class="btn btn-primary btn-sm" onclick="viewVisitorDetails(2)">详情</button>
+              </div>
+            </div>
+
+            <div class="visitor-card completed">
+              <div class="visitor-header">
+                <div class="visitor-name">刘先生</div>
+                <span class="status status-completed">已离开</span>
+              </div>
+              <div class="visitor-meta">
+                <div><strong>访问学生：</strong>李强</div>
+                <div><strong>宿舍：</strong>1号楼-306</div>
+                <div><strong>时间：</strong>11:00 - 14:30</div>
+              </div>
+              <div class="visitor-actions">
+                <button class="btn btn-primary btn-sm" onclick="viewVisitorDetails(3)">详情</button>
+                <button class="btn btn-warning btn-sm" onclick="printReceipt(3)">打印凭证</button>
+              </div>
+            </div>
+
+            <div class="visitor-card completed">
+              <div class="visitor-header">
+                <div class="visitor-name">陈女士</div>
+                <span class="status status-completed">已离开</span>
+              </div>
+              <div class="visitor-meta">
+                <div><strong>访问学生：</strong>刘芳</div>
+                <div><strong>宿舍：</strong>4号楼-209</div>
+                <div><strong>时间：</strong>13:45 - 16:20</div>
+              </div>
+              <div class="visitor-actions">
+                <button class="btn btn-primary btn-sm" onclick="viewVisitorDetails(4)">详情</button>
+                <button class="btn btn-warning btn-sm" onclick="printReceipt(4)">打印凭证</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <footer class="footer">
+        <p>© 2023 四川工商学院宿舍管理中心. 版权所有. 系统版本: 2.1.0</p>
+      </footer>
+    </main>
+  </div>
+  <script src="common.js"></script>
+</body>
+
+</html>

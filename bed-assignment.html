@@ -1,0 +1,2403 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>宿舍管理系统 - 床位分配</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700&display=swap">
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Noto Sans SC', sans-serif;
+      background-color: #f5f7fa;
+      color: #333;
+      line-height: 1.6;
+    }
+
+    .container {
+      display: flex;
+      min-height: 100vh;
+    }
+
+    /* 侧边栏样式 */
+    .sidebar {
+      width: 240px;
+      background: linear-gradient(180deg, #1e3c72 0%, #2a5298 100%);
+      color: white;
+      padding: 20px 0;
+      box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+      z-index: 100;
+    }
+
+    .logo-area {
+      padding: 0 20px 30px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      font-size: 20px;
+      font-weight: 700;
+      margin-bottom: 10px;
+    }
+
+    .logo i {
+      margin-right: 12px;
+      font-size: 24px;
+    }
+
+    .campus-info {
+      font-size: 12px;
+      opacity: 0.8;
+      padding-left: 36px;
+    }
+
+    .nav-links {
+      list-style: none;
+      padding: 20px 0;
+    }
+
+    .nav-links li {
+      margin: 5px 0;
+    }
+
+    .nav-links a {
+      display: flex;
+      align-items: center;
+      padding: 12px 20px;
+      color: rgba(255, 255, 255, 0.8);
+      text-decoration: none;
+      transition: all 0.3s;
+      border-left: 4px solid transparent;
+    }
+
+    .nav-links a:hover,
+    .nav-links a.active {
+      background: rgba(255, 255, 255, 0.1);
+      color: white;
+      border-left-color: #4CAF50;
+    }
+
+    .nav-links i {
+      width: 24px;
+      margin-right: 12px;
+      font-size: 16px;
+    }
+
+    /* 主要内容区域 */
+    .main-content {
+      flex: 1;
+      padding: 20px;
+      overflow-y: auto;
+    }
+
+    /* 头部样式 */
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 30px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid #e0e6ef;
+    }
+
+    .header-title h1 {
+      font-size: 28px;
+      color: #2c3e50;
+      margin-bottom: 5px;
+    }
+
+    .header-title p {
+      color: #7f8c8d;
+      font-size: 14px;
+    }
+
+    .header-controls {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .search-bar {
+      position: relative;
+      background: white;
+      border-radius: 25px;
+      padding: 8px 15px 8px 40px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+      border: 1px solid #e0e6ef;
+    }
+
+    .search-bar i {
+      position: absolute;
+      left: 15px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #95a5a6;
+    }
+
+    .search-bar input {
+      border: none;
+      outline: none;
+      width: 200px;
+      background: transparent;
+    }
+
+    .user-info {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    /* 主要内容区域 */
+    .main-content {
+      flex: 1;
+      overflow-y: auto;
+    }
+
+    header {
+      background: white;
+      padding: 20px 30px;
+      border-bottom: 1px solid #e5e7eb;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    }
+
+    .header-title h1 {
+      font-size: 24px;
+      color: #1e3a8a;
+      margin-bottom: 5px;
+    }
+
+    .header-title p {
+      color: #6b7280;
+      font-size: 14px;
+    }
+
+    .header-controls {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 15px;
+    }
+
+    .search-bar {
+      position: relative;
+      width: 300px;
+    }
+
+    .search-bar i {
+      position: absolute;
+      left: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #6b7280;
+    }
+
+    .search-bar input {
+      width: 100%;
+      padding: 10px 10px 10px 40px;
+      border: 1px solid #d1d5db;
+      border-radius: 8px;
+      font-size: 14px;
+      transition: all 0.3s;
+    }
+
+    .search-bar input:focus {
+      outline: none;
+      border-color: #3b82f6;
+      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+    }
+
+    .user-info {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .user-avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+    }
+
+    .user-details h3 {
+      font-size: 14px;
+      margin-bottom: 2px;
+    }
+
+    .user-details p {
+      font-size: 12px;
+      color: #6b7280;
+    }
+
+    /* 按钮样式 */
+    .action-buttons {
+      display: flex;
+      gap: 10px;
+      padding: 20px 30px;
+      background: white;
+      border-bottom: 1px solid #e5e7eb;
+    }
+
+    .btn {
+      padding: 10px 20px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.3s;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+      color: white;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+    }
+
+    .btn-success {
+      background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+      color: white;
+    }
+
+    .btn-success:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+    }
+
+    .btn-warning {
+      background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+      color: white;
+    }
+
+    .btn-warning:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(245, 158, 11, 0.3);
+    }
+
+    .btn-danger {
+      background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+      color: white;
+    }
+
+    .btn-danger:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+    }
+
+    .btn-secondary {
+      background: linear-gradient(135deg, #6b7280 0%, #4b5563 100%);
+      color: white;
+    }
+
+    .btn-block {
+      display: block;
+      width: 100%;
+    }
+
+    .btn-sm {
+      padding: 6px 12px;
+      font-size: 12px;
+    }
+
+    /* 筛选选项 */
+    .filter-options {
+      display: flex;
+      gap: 10px;
+      padding: 15px 30px;
+      background: white;
+      border-bottom: 1px solid #e5e7eb;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .filter-btn {
+      padding: 8px 16px;
+      border: 1px solid #d1d5db;
+      background: white;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 14px;
+      transition: all 0.3s;
+    }
+
+    .filter-btn:hover {
+      border-color: #3b82f6;
+      color: #3b82f6;
+    }
+
+    .filter-btn.active {
+      background: #3b82f6;
+      color: white;
+      border-color: #3b82f6;
+    }
+
+    /* 分配容器 */
+    .assignment-container {
+      display: grid;
+      grid-template-columns: 350px 1fr;
+      gap: 20px;
+      padding: 30px;
+      min-height: calc(100vh - 300px);
+    }
+
+    @media (max-width: 1200px) {
+      .assignment-container {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .left-panel {
+      background: white;
+      border-radius: 12px;
+      padding: 25px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+      height: fit-content;
+    }
+
+    .left-panel h3 {
+      color: #1e3a8a;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .student-info-card {
+      background: #f8fafc;
+      border-radius: 10px;
+      padding: 20px;
+      margin-bottom: 20px;
+      border: 1px solid #e5e7eb;
+    }
+
+    .student-info-card h4 {
+      color: #374151;
+      margin-bottom: 15px;
+      padding-bottom: 10px;
+      border-bottom: 2px solid #e5e7eb;
+    }
+
+    .student-info-card p {
+      margin: 8px 0;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .student-info-card strong {
+      color: #4b5563;
+      font-weight: 600;
+    }
+
+    .right-panel {
+      background: white;
+      border-radius: 12px;
+      padding: 25px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+    }
+
+    /* 床位可视化 */
+    .bed-visualization {
+      display: grid;
+      grid-template-columns: repeat(8, 1fr);
+      gap: 15px;
+      margin: 20px 0;
+      padding: 20px;
+      background: #f9fafb;
+      border-radius: 10px;
+      border: 1px solid #e5e7eb;
+    }
+
+    @media (max-width: 1200px) {
+      .bed-visualization {
+        grid-template-columns: repeat(6, 1fr);
+      }
+    }
+
+    @media (max-width: 768px) {
+      .bed-visualization {
+        grid-template-columns: repeat(4, 1fr);
+      }
+    }
+
+    @media (max-width: 480px) {
+      .bed-visualization {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    .bed-item {
+      background: white;
+      border: 2px solid #d1d5db;
+      border-radius: 8px;
+      padding: 15px 5px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.3s;
+      position: relative;
+      min-height: 80px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .bed-item:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .bed-item.vacant {
+      border-color: #10b981;
+      background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);
+    }
+
+    .bed-item.occupied {
+      border-color: #f59e0b;
+      background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+    }
+
+    .bed-item.selected {
+      border-color: #3b82f6;
+      background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
+      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+    }
+
+    .bed-item.maintenance {
+      border-color: #ef4444;
+      background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
+    }
+
+    .bed-item.reserved {
+      border-color: #8b5cf6;
+      background: linear-gradient(135deg, #ede9fe 0%, #ddd6fe 100%);
+    }
+
+    .bed-item small {
+      display: block;
+      margin-top: 5px;
+      font-size: 12px;
+      color: #6b7280;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      max-width: 100%;
+    }
+
+    /* 状态标签 */
+    .status {
+      display: inline-block;
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    .status-completed {
+      background: #d1fae5;
+      color: #065f46;
+    }
+
+    .status-processing {
+      background: #fef3c7;
+      color: #92400e;
+    }
+
+    /* 表格样式 */
+    .data-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+    }
+
+    .data-table th {
+      background: #f9fafb;
+      padding: 12px 15px;
+      text-align: left;
+      font-weight: 600;
+      color: #374151;
+      border-bottom: 2px solid #e5e7eb;
+    }
+
+    .data-table td {
+      padding: 12px 15px;
+      border-bottom: 1px solid #e5e7eb;
+      vertical-align: middle;
+    }
+
+    .data-table tbody tr:hover {
+      background: #f9fafb;
+    }
+
+    .data-table input[type="radio"] {
+      cursor: pointer;
+    }
+
+    /* 页脚 */
+    .footer {
+      padding: 20px 30px;
+      text-align: center;
+      color: #6b7280;
+      font-size: 14px;
+      border-top: 1px solid #e5e7eb;
+      background: white;
+    }
+
+    /* 模态框样式 */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 1000;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+
+    .modal-content {
+      background: white;
+      border-radius: 12px;
+      width: 500px;
+      max-width: 100%;
+      max-height: 90vh;
+      overflow-y: auto;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+    }
+
+    .modal-header {
+      padding: 20px;
+      background: linear-gradient(135deg, #1e3a8a 0%, #1e40af 100%);
+      color: white;
+      border-radius: 12px 12px 0 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .modal-header h3 {
+      margin: 0;
+      font-size: 18px;
+    }
+
+    .close-btn {
+      background: none;
+      border: none;
+      color: white;
+      font-size: 24px;
+      cursor: pointer;
+      width: 30px;
+      height: 30px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      transition: background 0.3s;
+    }
+
+    .close-btn:hover {
+      background: rgba(255, 255, 255, 0.1);
+    }
+
+    .modal-body {
+      padding: 30px;
+    }
+
+    .modal-footer {
+      padding: 20px;
+      border-top: 1px solid #e5e7eb;
+      text-align: right;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 600;
+      color: #374151;
+    }
+
+    .form-control {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1px solid #d1d5db;
+      border-radius: 6px;
+      font-size: 14px;
+      transition: all 0.3s;
+    }
+
+    .form-control:focus {
+      outline: none;
+      border-color: #3b82f6;
+      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+    }
+
+    .form-row {
+      display: flex;
+      gap: 15px;
+      margin-bottom: 20px;
+    }
+
+    .form-row .form-group {
+      flex: 1;
+      margin-bottom: 0;
+    }
+
+    /* 错误消息 */
+    .error-message {
+      color: #ef4444;
+      font-size: 14px;
+      margin-top: 10px;
+      padding: 10px;
+      background: #fee2e2;
+      border-radius: 6px;
+      border: 1px solid #fecaca;
+      display: none;
+    }
+
+    /* 统计卡片 */
+    .stats-card {
+      background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+      color: white;
+      padding: 15px;
+      border-radius: 8px;
+      margin-bottom: 15px;
+    }
+
+    .stats-card h5 {
+      margin-bottom: 10px;
+      font-size: 14px;
+      opacity: 0.9;
+    }
+
+    .stats-card .number {
+      font-size: 24px;
+      font-weight: bold;
+    }
+
+    /* 提示消息 */
+    .hint-message {
+      background: #f0f9ff;
+      border: 1px solid #dbeafe;
+      border-radius: 8px;
+      padding: 15px;
+      margin-bottom: 20px;
+      font-size: 14px;
+      color: #1e40af;
+    }
+
+    .hint-message i {
+      margin-right: 8px;
+    }
+
+    /* 空状态 */
+    .empty-state {
+      text-align: center;
+      padding: 40px 20px;
+      color: #6b7280;
+    }
+
+    .empty-state i {
+      font-size: 48px;
+      margin-bottom: 15px;
+      color: #d1d5db;
+    }
+
+    /* 加载状态 */
+    .loading {
+      text-align: center;
+      padding: 20px;
+      color: #6b7280;
+    }
+
+    /* 响应式设计 */
+    @media (max-width: 768px) {
+      .container {
+        flex-direction: column;
+      }
+
+      .sidebar {
+        width: 100%;
+      }
+
+      .assignment-container {
+        padding: 15px;
+      }
+
+      .action-buttons {
+        flex-wrap: wrap;
+      }
+
+      .filter-options {
+        flex-wrap: wrap;
+      }
+
+      .header-controls {
+        flex-direction: column;
+        gap: 15px;
+      }
+
+      .search-bar {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <aside class="sidebar">
+      <div class="logo-area">
+        <div class="logo">
+          <i class="fas fa-hotel"></i>
+          <span>宿舍管理系统</span>
+        </div>
+        <div class="campus-info">四川工商学院学生宿舍管理中心</div>
+      </div>
+      <ul class="nav-links">
+        <li><a href="index.html"><i class="fas fa-home"></i><span>系统首页</span></a></li>
+        <li><a href="dorm-management.html"><i class="fas fa-building"></i><span>宿舍楼管理</span></a></li>
+        <li><a href="student.html"><i class="fas fa-user-friends"></i><span>住宿学生</span></a></li>
+        <li><a href="bed-assignment.html" class="active"><i class="fas fa-bed"></i><span>床位分配</span></a></li>
+        <li><a href="repair.html"><i class="fas fa-tools"></i><span>报修管理</span></a></li>
+        <li><a href="visitor.html"><i class="fas fa-user-check"></i><span>访客登记</span></a></li>
+        <li><a href="statistics.html"><i class="fas fa-chart-bar"></i><span>数据统计</span></a></li>
+        <li><a href="settings.html"><i class="fas fa-cog"></i><span>系统设置</span></a></li>
+      </ul>
+    </aside>
+
+    <main class="main-content">
+      <header>
+        <div class="header-title">
+          <h1>床位分配管理</h1>
+          <p>床位分配、调整和查询功能</p>
+        </div>
+        <div class="header-controls">
+          <div class="search-bar">
+            <i class="fas fa-search"></i>
+            <input type="text" placeholder="搜索床位或学生..." id="searchInput">
+          </div>
+          <div class="user-info">
+            <div class="user-avatar">
+              <i class="fas fa-user-tie"></i>
+            </div>
+            <div class="user-details">
+              <h3>李管理员</h3>
+              <p>宿舍管理中心</p>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <div class="action-buttons">
+        <button class="btn btn-primary" onclick="showAutoAssignModal()">
+          <i class="fas fa-robot"></i> 智能分配
+        </button>
+        <button class="btn btn-success" onclick="showManualAssignModal()">
+          <i class="fas fa-hand-pointer"></i> 手动分配
+        </button>
+        <button class="btn btn-warning" onclick="showTransferModal()">
+          <i class="fas fa-exchange-alt"></i> 调宿处理
+        </button>
+        <button class="btn btn-danger" onclick="exportBedData()">
+          <i class="fas fa-file-export"></i> 导出分配表
+        </button>
+      </div>
+
+      <div class="filter-options">
+        <button class="filter-btn active" onclick="filterBeds('all')">全部床位</button>
+        <button class="filter-btn" onclick="filterBeds('vacant')">空余床位</button>
+        <button class="filter-btn" onclick="filterBeds('occupied')">已占床位</button>
+        <button class="filter-btn" onclick="filterBeds('male')">男生楼</button>
+        <button class="filter-btn" onclick="filterBeds('female')">女生楼</button>
+        <select class="form-control" style="width: auto;" id="buildingFilter" onchange="filterByBuilding()">
+          <option value="">选择楼栋</option>
+          <option value="1">1号楼</option>
+          <option value="2">2号楼</option>
+          <option value="3" selected>3号楼</option>
+          <option value="4">4号楼</option>
+          <option value="5">5号楼</option>
+          <option value="6">6号楼</option>
+        </select>
+      </div>
+
+      <div class="assignment-container">
+        <div class="left-panel">
+          <h3><i class="fas fa-info-circle"></i> 分配信息</h3>
+
+          <div class="hint-message">
+            <i class="fas fa-lightbulb"></i>
+            提示：先选择学生，然后选择床位，最后点击"确认分配"
+          </div>
+
+          <div class="student-info-card" id="studentInfo">
+            <h4>待分配学生</h4>
+            <p><strong>姓名：</strong><span id="studentName">待选择</span></p>
+            <p><strong>学号：</strong><span id="studentId">-</span></p>
+            <p><strong>性别：</strong><span id="studentGender">-</span></p>
+            <p><strong>学院：</strong><span id="studentCollege">-</span></p>
+            <button class="btn btn-sm btn-secondary" style="margin-top: 10px;" onclick="clearStudentSelection()">
+              <i class="fas fa-times"></i> 清除选择
+            </button>
+          </div>
+
+          <div class="student-info-card" id="bedInfo">
+            <h4>选中床位信息</h4>
+            <p><strong>位置：</strong><span id="selectedBed">未选择</span></p>
+            <p><strong>状态：</strong><span id="bedStatus" class="status status-processing">未选择</span></p>
+            <p><strong>房间类型：</strong><span id="roomType">-</span></p>
+            <p><strong>月费：</strong><span id="monthlyFee">-</span></p>
+            <button class="btn btn-sm btn-secondary" style="margin-top: 10px;" onclick="clearBedSelection()">
+              <i class="fas fa-times"></i> 清除选择
+            </button>
+          </div>
+
+          <button class="btn btn-primary btn-block" style="margin-top: 20px;" onclick="confirmAssignment()"
+            id="confirmBtn" disabled>
+            <i class="fas fa-check"></i> 确认分配
+          </button>
+
+          <div style="margin-top: 20px;">
+            <div class="stats-card">
+              <h5><i class="fas fa-male"></i> 男生楼空余</h5>
+              <div class="number" id="maleVacant">247</div>
+            </div>
+            <div class="stats-card" style="background: linear-gradient(135deg, #ec4899 0%, #be185d 100%);">
+              <h5><i class="fas fa-female"></i> 女生楼空余</h5>
+              <div class="number" id="femaleVacant">142</div>
+            </div>
+            <div class="stats-card" style="background: linear-gradient(135deg, #10b981 0%, #059669 100%);">
+              <h5><i class="fas fa-bed"></i> 总计空余</h5>
+              <div class="number" id="totalVacant">389</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="right-panel">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+            <h3><i class="fas fa-bed"></i> <span id="buildingTitle">3号楼床位分布</span></h3>
+            <div style="display: flex; gap: 10px; align-items: center;">
+              <select class="form-control" style="width: auto;" id="floorSelect" onchange="changeFloor()">
+                <option value="1">1楼</option>
+                <option value="2">2楼</option>
+                <option value="3">3楼</option>
+                <option value="4" selected>4楼</option>
+                <option value="5">5楼</option>
+                <option value="6">6楼</option>
+              </select>
+            </div>
+          </div>
+
+          <div
+            style="display: flex; justify-content: space-between; margin: 10px 0 20px 0; flex-wrap: wrap; gap: 10px; padding: 15px; background: #f9fafb; border-radius: 8px;">
+            <div><span
+                style="display: inline-block; width: 12px; height: 12px; background: #10b981; margin-right: 5px; border-radius: 2px;"></span>空余
+            </div>
+            <div><span
+                style="display: inline-block; width: 12px; height: 12px; background: #f59e0b; margin-right: 5px; border-radius: 2px;"></span>已占
+            </div>
+            <div><span
+                style="display: inline-block; width: 12px; height: 12px; background: #3b82f6; margin-right: 5px; border-radius: 2px;"></span>选中
+            </div>
+            <div><span
+                style="display: inline-block; width: 12px; height: 12px; background: #ef4444; margin-right: 5px; border-radius: 2px;"></span>维修中
+            </div>
+            <div><span
+                style="display: inline-block; width: 12px; height: 12px; background: #8b5cf6; margin-right: 5px; border-radius: 2px;"></span>保留
+            </div>
+          </div>
+
+          <div class="bed-visualization" id="bedContainer">
+            <!-- 床位将通过JavaScript动态生成 -->
+          </div>
+
+          <div style="margin-top: 30px;">
+            <h4><i class="fas fa-users"></i> 待分配学生列表</h4>
+            <table class="data-table" id="studentTable">
+              <thead>
+                <tr>
+                  <th>选择</th>
+                  <th>学号</th>
+                  <th>姓名</th>
+                  <th>性别</th>
+                  <th>学院</th>
+                  <th>申请时间</th>
+                  <th>操作</th>
+                </tr>
+              </thead>
+              <tbody id="studentTableBody">
+                <!-- 学生数据将通过JavaScript动态生成 -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <footer class="footer">
+        <p>© 2023 四川工商学院宿舍管理中心. 版权所有. 系统版本: 2.1.0</p>
+      </footer>
+    </main>
+  </div>
+
+  <!-- 智能分配模态框 -->
+  <div class="modal-overlay" id="autoAssignModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3><i class="fas fa-robot"></i> 智能分配床位</h3>
+        <button class="close-btn" onclick="closeModal('autoAssignModal')">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label for="autoGender">分配性别</label>
+          <select id="autoGender" class="form-control">
+            <option value="">全部性别</option>
+            <option value="男">男生</option>
+            <option value="女">女生</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="autoCollege">学院筛选</label>
+          <select id="autoCollege" class="form-control">
+            <option value="">全部学院</option>
+            <option value="计算机学院">计算机学院</option>
+            <option value="外国语学院">外国语学院</option>
+            <option value="机械工程学院">机械工程学院</option>
+            <option value="医学院">医学院</option>
+            <option value="经济学院">经济学院</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="autoBuilding">宿舍楼</label>
+          <select id="autoBuilding" class="form-control">
+            <option value="">自动选择</option>
+            <option value="1">1号楼（男生）</option>
+            <option value="2">2号楼（女生）</option>
+            <option value="3">3号楼（男生）</option>
+            <option value="4">4号楼（女生）</option>
+            <option value="5">5号楼（男生）</option>
+            <option value="6">6号楼（女生）</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>分配策略</label>
+          <div style="display: flex; gap: 15px; flex-wrap: wrap; margin-top: 10px;">
+            <label style="display: flex; align-items: center; gap: 5px;">
+              <input type="radio" name="strategy" value="sameCollege" checked> 同学院优先
+            </label>
+            <label style="display: flex; align-items: center; gap: 5px;">
+              <input type="radio" name="strategy" value="mixed"> 混合分配
+            </label>
+            <label style="display: flex; align-items: center; gap: 5px;">
+              <input type="radio" name="strategy" value="floor"> 按楼层分配
+            </label>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>待分配学生（<span id="autoStudentCount">5</span>人）</label>
+          <div
+            style="max-height: 200px; overflow-y: auto; border: 1px solid #e5e7eb; border-radius: 6px; padding: 10px; background: #f9fafb;">
+            <div id="autoStudentList"></div>
+          </div>
+        </div>
+
+        <div id="autoAssignError" class="error-message"></div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" onclick="closeModal('autoAssignModal')">取消</button>
+        <button class="btn btn-primary" onclick="executeAutoAssign()">开始智能分配</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 手动分配模态框 -->
+  <div class="modal-overlay" id="manualAssignModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3><i class="fas fa-hand-pointer"></i> 手动分配床位</h3>
+        <button class="close-btn" onclick="closeModal('manualAssignModal')">&times;</button>
+      </div>
+      <form id="manualAssignForm">
+        <div class="modal-body">
+          <div class="form-group">
+            <label for="manualStudent">选择学生</label>
+            <select id="manualStudent" class="form-control" required onchange="updateManualStudentInfo()">
+              <option value="">请选择学生</option>
+              <!-- 选项将通过JavaScript动态生成 -->
+            </select>
+          </div>
+
+          <div class="student-info-card" id="manualStudentInfo" style="display: none; margin-bottom: 20px;">
+            <h4>学生信息</h4>
+            <p><strong>性别：</strong><span id="manualGender">-</span></p>
+            <p><strong>学院：</strong><span id="manualCollege">-</span></p>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="manualBuilding">宿舍楼 *</label>
+              <select id="manualBuilding" class="form-control" required onchange="loadAvailableRooms()">
+                <option value="">请选择宿舍楼</option>
+                <option value="1">1号楼（男生）</option>
+                <option value="2">2号楼（女生）</option>
+                <option value="3">3号楼（男生）</option>
+                <option value="4">4号楼（女生）</option>
+                <option value="5">5号楼（男生）</option>
+                <option value="6">6号楼（女生）</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="manualFloor">楼层 *</label>
+              <select id="manualFloor" class="form-control" required onchange="loadAvailableRooms()">
+                <option value="">请选择楼层</option>
+                <option value="1">1楼</option>
+                <option value="2">2楼</option>
+                <option value="3">3楼</option>
+                <option value="4">4楼</option>
+                <option value="5">5楼</option>
+                <option value="6">6楼</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="manualRoom">房间号 *</label>
+            <select id="manualRoom" class="form-control" required onchange="loadAvailableBeds()">
+              <option value="">请选择房间</option>
+              <!-- 选项将通过JavaScript动态生成 -->
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="manualBed">床位号 *</label>
+            <select id="manualBed" class="form-control" required>
+              <option value="">请选择床位</option>
+              <!-- 选项将通过JavaScript动态生成 -->
+            </select>
+          </div>
+
+          <div id="manualAssignError" class="error-message"></div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" onclick="closeModal('manualAssignModal')">取消</button>
+          <button type="submit" class="btn btn-primary">确认分配</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- 调宿处理模态框 -->
+  <div class="modal-overlay" id="transferModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3><i class="fas fa-exchange-alt"></i> 调换宿舍</h3>
+        <button class="close-btn" onclick="closeModal('transferModal')">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label for="transferStudent">选择需要调换的学生</label>
+          <select id="transferStudent" class="form-control" onchange="loadCurrentBedInfo()">
+            <option value="">请选择学生</option>
+            <!-- 选项将通过JavaScript动态生成 -->
+          </select>
+        </div>
+
+        <div class="student-info-card" id="currentBedInfo" style="display: none; margin-bottom: 20px;">
+          <h4>当前床位信息</h4>
+          <p><strong>位置：</strong><span id="currentBedLocation">-</span></p>
+          <p><strong>室友：</strong><span id="currentRoommates">-</span></p>
+          <p><strong>性别：</strong><span id="currentStudentGender">-</span></p>
+          <p><strong>学院：</strong><span id="currentStudentCollege">-</span></p>
+        </div>
+
+        <h4 style="margin-bottom: 15px;">新床位信息</h4>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="transferBuilding">新宿舍楼</label>
+            <select id="transferBuilding" class="form-control" onchange="loadTransferRooms()">
+              <option value="">请选择宿舍楼</option>
+              <option value="1">1号楼（男生）</option>
+              <option value="2">2号楼（女生）</option>
+              <option value="3">3号楼（男生）</option>
+              <option value="4">4号楼（女生）</option>
+              <option value="5">5号楼（男生）</option>
+              <option value="6">6号楼（女生）</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="transferFloor">新楼层</label>
+            <select id="transferFloor" class="form-control" onchange="loadTransferRooms()">
+              <option value="">请选择楼层</option>
+              <option value="1">1楼</option>
+              <option value="2">2楼</option>
+              <option value="3">3楼</option>
+              <option value="4">4楼</option>
+              <option value="5">5楼</option>
+              <option value="6">6楼</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="transferRoom">新房间号</label>
+          <select id="transferRoom" class="form-control" onchange="loadTransferBeds()">
+            <option value="">请选择房间</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="transferBed">新床位号</label>
+          <select id="transferBed" class="form-control">
+            <option value="">请选择床位</option>
+          </select>
+        </div>
+
+        <div id="transferError" class="error-message"></div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" onclick="closeModal('transferModal')">取消</button>
+        <button class="btn btn-primary" onclick="executeTransfer()">确认调换</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // 完整的床位数据
+    const bedData = {
+      '1': { // 1号楼（男生）
+        '1': generateFloorBeds(1, '男', 20),
+        '2': generateFloorBeds(1, '男', 20),
+        '3': generateFloorBeds(1, '男', 20),
+        '4': generateFloorBeds(1, '男', 20),
+        '5': generateFloorBeds(1, '男', 20),
+        '6': generateFloorBeds(1, '男', 20)
+      },
+      '2': { // 2号楼（女生）
+        '1': generateFloorBeds(2, '女', 20),
+        '2': generateFloorBeds(2, '女', 20),
+        '3': generateFloorBeds(2, '女', 20),
+        '4': generateFloorBeds(2, '女', 20),
+        '5': generateFloorBeds(2, '女', 20),
+        '6': generateFloorBeds(2, '女', 20)
+      },
+      '3': { // 3号楼（男生）
+        '1': generateFloorBeds(3, '男', 20),
+        '2': generateFloorBeds(3, '男', 20),
+        '3': generateFloorBeds(3, '男', 20),
+        '4': generateFloorBeds(3, '男', 20, true), // 4楼有初始数据
+        '5': generateFloorBeds(3, '男', 20),
+        '6': generateFloorBeds(3, '男', 20)
+      },
+      '4': { // 4号楼（女生）
+        '1': generateFloorBeds(4, '女', 20),
+        '2': generateFloorBeds(4, '女', 20),
+        '3': generateFloorBeds(4, '女', 20),
+        '4': generateFloorBeds(4, '女', 20),
+        '5': generateFloorBeds(4, '女', 20),
+        '6': generateFloorBeds(4, '女', 20)
+      },
+      '5': { // 5号楼（男生）
+        '1': generateFloorBeds(5, '男', 20),
+        '2': generateFloorBeds(5, '男', 20),
+        '3': generateFloorBeds(5, '男', 20),
+        '4': generateFloorBeds(5, '男', 20),
+        '5': generateFloorBeds(5, '男', 20),
+        '6': generateFloorBeds(5, '男', 20)
+      },
+      '6': { // 6号楼（女生）
+        '1': generateFloorBeds(6, '女', 20),
+        '2': generateFloorBeds(6, '女', 20),
+        '3': generateFloorBeds(6, '女', 20),
+        '4': generateFloorBeds(6, '女', 20),
+        '5': generateFloorBeds(6, '女', 20),
+        '6': generateFloorBeds(6, '女', 20)
+      }
+    };
+
+    // 添加初始数据到3号楼4楼
+    function initThirdBuildingFourthFloor() {
+      const floorData = bedData['3']['4'];
+
+      // 设置一些初始占用床位
+      const initialStudents = [
+        { room: '408', bed: '3', student: { id: '2023001', name: '张明', gender: '男', college: '计算机学院' } },
+        { room: '408', bed: '4', student: { id: '2023003', name: '李强', gender: '男', college: '机械工程学院' } },
+        { room: '409', bed: '1', student: { id: '2023015', name: '王磊', gender: '男', college: '计算机学院' } },
+        { room: '409', bed: '2', student: { id: '2023016', name: '刘洋', gender: '男', college: '计算机学院' } },
+        { room: '409', bed: '4', student: { id: '2023017', name: '陈浩', gender: '男', college: '机械工程学院' } },
+        { room: '410', bed: '3', student: { id: '2023018', name: '赵峰', gender: '男', college: '经济学院' } },
+        { room: '410', bed: '4', student: { id: '2023019', name: '孙伟', gender: '男', college: '经济学院' } },
+        { room: '411', bed: '1', student: { id: '2023020', name: '周涛', gender: '男', college: '计算机学院' } },
+        { room: '411', bed: '2', student: { id: '2023021', name: '吴刚', gender: '男', college: '计算机学院' } },
+        { room: '411', bed: '3', student: { id: '2023022', name: '郑强', gender: '男', college: '机械工程学院' } },
+        { room: '411', bed: '4', student: { id: '2023023', name: '王超', gender: '男', college: '机械工程学院' } }
+      ];
+
+      initialStudents.forEach(initial => {
+        const bed = floorData.find(b => b.room === initial.room && b.bed === initial.bed);
+        if (bed) {
+          bed.status = 'occupied';
+          bed.student = initial.student;
+        }
+      });
+
+      // 设置维修和保留床位
+      const maintenanceBed = floorData.find(b => b.room === '412' && b.bed === '1');
+      if (maintenanceBed) maintenanceBed.status = 'maintenance';
+
+      const reservedBed = floorData.find(b => b.room === '412' && b.bed === '2');
+      if (reservedBed) reservedBed.status = 'reserved';
+    }
+
+    // 生成楼层床位数据
+    function generateFloorBeds(building, gender, roomCount, isInitialFloor = false) {
+      const floors = [];
+      let roomStart = 101;
+
+      for (let i = 0; i < roomCount; i++) {
+        const roomNum = roomStart + i;
+        const room = roomNum.toString();
+
+        // 每个房间4个床位
+        for (let bedNum = 1; bedNum <= 4; bedNum++) {
+          let status = 'vacant';
+
+          // 随机设置一些维修和保留床位
+          if (Math.random() < 0.02) status = 'maintenance';
+          if (Math.random() < 0.01) status = 'reserved';
+
+          floors.push({
+            room: room,
+            bed: bedNum.toString(),
+            status: status,
+            student: null,
+            type: '4人间',
+            fee: 800,
+            building: building.toString(),
+            floor: '4',
+            gender: gender
+          });
+        }
+      }
+
+      return floors;
+    }
+
+    // 待分配学生
+    const waitingStudents = [
+      { id: '2023010', name: '杨帆', gender: '男', college: '计算机学院', applyDate: '2023-10-10' },
+      { id: '2023011', name: '林雪', gender: '女', college: '外国语学院', applyDate: '2023-10-11' },
+      { id: '2023012', name: '徐峰', gender: '男', college: '机械工程学院', applyDate: '2023-10-12' },
+      { id: '2023013', name: '刘梅', gender: '女', college: '医学院', applyDate: '2023-10-13' },
+      { id: '2023014', name: '王芳', gender: '女', college: '经济学院', applyDate: '2023-10-14' }
+    ];
+
+    // 全局状态
+    let selectedStudent = null;
+    let selectedBed = null;
+    let currentBuilding = '3';
+    let currentFloor = '4';
+    let currentFilter = 'all';
+
+    // 页面初始化
+    document.addEventListener('DOMContentLoaded', function () {
+      // 初始化床位数据
+      initThirdBuildingFourthFloor();
+
+      // 渲染界面
+      renderBedVisualization();
+      renderStudentTable();
+      updateStatistics();
+      fillManualAssignStudents();
+      fillTransferStudents();
+
+      // 设置搜索功能
+      setupSearch();
+    });
+
+    // 渲染床位可视化
+    function renderBedVisualization() {
+      const container = document.getElementById('bedContainer');
+      container.innerHTML = '';
+
+      const beds = bedData[currentBuilding]?.[currentFloor] || [];
+
+      if (beds.length === 0) {
+        container.innerHTML = `
+          <div class="empty-state" style="grid-column: 1 / -1;">
+            <i class="fas fa-bed"></i>
+            <h3>暂无床位数据</h3>
+            <p>该楼层没有床位信息</p>
+          </div>
+        `;
+        return;
+      }
+
+      // 应用筛选
+      let filteredBeds = beds;
+      if (currentFilter === 'vacant') {
+        filteredBeds = beds.filter(bed => bed.status === 'vacant');
+      } else if (currentFilter === 'occupied') {
+        filteredBeds = beds.filter(bed => bed.status === 'occupied');
+      } else if (currentFilter === 'male') {
+        filteredBeds = beds.filter(bed => bed.gender === '男');
+      } else if (currentFilter === 'female') {
+        filteredBeds = beds.filter(bed => bed.gender === '女');
+      }
+
+      if (filteredBeds.length === 0) {
+        container.innerHTML = `
+          <div class="empty-state" style="grid-column: 1 / -1;">
+            <i class="fas fa-search"></i>
+            <h3>无匹配床位</h3>
+            <p>没有找到符合条件的床位</p>
+            <button class="btn btn-secondary" onclick="filterBeds('all')" style="margin-top: 10px;">
+              显示全部床位
+            </button>
+          </div>
+        `;
+        return;
+      }
+
+      filteredBeds.forEach(bed => {
+        const bedDiv = document.createElement('div');
+        bedDiv.className = `bed-item ${bed.status}`;
+        bedDiv.setAttribute('data-bed', `${bed.room}-${bed.bed}`);
+        bedDiv.onclick = () => selectBed(bed);
+
+        let statusText = '';
+        let studentName = '';
+
+        switch (bed.status) {
+          case 'vacant':
+            statusText = '空余';
+            break;
+          case 'occupied':
+            statusText = '已占';
+            studentName = bed.student?.name || '';
+            break;
+          case 'maintenance':
+            statusText = '维修';
+            break;
+          case 'reserved':
+            statusText = '保留';
+            break;
+        }
+
+        bedDiv.innerHTML = `
+          <div style="font-weight: 600;">${bed.room}-${bed.bed}</div>
+          <small>${studentName || statusText}</small>
+        `;
+
+        if (selectedBed && selectedBed.room === bed.room && selectedBed.bed === bed.bed) {
+          bedDiv.classList.add('selected');
+        }
+
+        container.appendChild(bedDiv);
+      });
+    }
+
+    // 渲染学生表格
+    function renderStudentTable() {
+      const tbody = document.getElementById('studentTableBody');
+      tbody.innerHTML = '';
+
+      if (waitingStudents.length === 0) {
+        tbody.innerHTML = `
+          <tr>
+            <td colspan="7" style="text-align: center; padding: 40px 20px;">
+              <i class="fas fa-users" style="font-size: 24px; color: #d1d5db; margin-bottom: 10px; display: block;"></i>
+              <p>暂无待分配学生</p>
+            </td>
+          </tr>
+        `;
+        return;
+      }
+
+      waitingStudents.forEach(student => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+          <td>
+            <input type="radio" name="studentSelect" value="${student.id}" 
+                   onclick="selectStudentFromTable('${student.id}')" 
+                   ${selectedStudent?.id === student.id ? 'checked' : ''}>
+          </td>
+          <td>${student.id}</td>
+          <td>${student.name}</td>
+          <td><span class="status ${student.gender === '男' ? 'status-completed' : 'status-processing'}">${student.gender}</span></td>
+          <td>${student.college}</td>
+          <td>${student.applyDate}</td>
+          <td>
+            <button class="btn btn-sm btn-primary" onclick="selectStudentFromTable('${student.id}')">
+              选择
+            </button>
+          </td>
+        `;
+        tbody.appendChild(row);
+      });
+    }
+
+    // 从表格中选择学生
+    function selectStudentFromTable(studentId) {
+      const student = waitingStudents.find(s => s.id === studentId);
+      if (student) {
+        selectedStudent = student;
+        updateStudentInfo();
+        updateConfirmButton();
+
+        // 自动筛选对应的宿舍楼
+        const buildingFilter = document.getElementById('buildingFilter');
+        if (student.gender === '男') {
+          buildingFilter.value = '3'; // 默认男生楼
+        } else {
+          buildingFilter.value = '2'; // 默认女生楼
+        }
+        filterByBuilding();
+      }
+    }
+
+    // 选择床位
+    function selectBed(bed) {
+      if (bed.status === 'occupied') {
+        showMessage('该床位已被占用，请选择其他床位！', 'error');
+        return;
+      }
+
+      if (bed.status === 'maintenance') {
+        showMessage('该床位正在维修中，请选择其他床位！', 'error');
+        return;
+      }
+
+      if (bed.status === 'reserved') {
+        showMessage('该床位已被保留，请选择其他床位！', 'error');
+        return;
+      }
+
+      selectedBed = bed;
+
+      // 更新床位信息显示
+      document.getElementById('selectedBed').textContent = `${currentBuilding}号楼-${bed.room}-${bed.bed}`;
+      document.getElementById('bedStatus').textContent = '空余';
+      document.getElementById('bedStatus').className = 'status status-completed';
+      document.getElementById('roomType').textContent = bed.type;
+      document.getElementById('monthlyFee').textContent = `${bed.fee}元`;
+
+      // 更新床位可视化
+      renderBedVisualization();
+      updateConfirmButton();
+    }
+
+    // 更新学生信息显示
+    function updateStudentInfo() {
+      if (selectedStudent) {
+        document.getElementById('studentName').textContent = selectedStudent.name;
+        document.getElementById('studentId').textContent = selectedStudent.id;
+        document.getElementById('studentGender').textContent = selectedStudent.gender;
+        document.getElementById('studentCollege').textContent = selectedStudent.college;
+      } else {
+        document.getElementById('studentName').textContent = '待选择';
+        document.getElementById('studentId').textContent = '-';
+        document.getElementById('studentGender').textContent = '-';
+        document.getElementById('studentCollege').textContent = '-';
+      }
+    }
+
+    // 清除学生选择
+    function clearStudentSelection() {
+      selectedStudent = null;
+      updateStudentInfo();
+      updateConfirmButton();
+
+      // 清除表格中的单选按钮选中状态
+      document.querySelectorAll('input[name="studentSelect"]').forEach(radio => {
+        radio.checked = false;
+      });
+    }
+
+    // 清除床位选择
+    function clearBedSelection() {
+      selectedBed = null;
+      document.getElementById('selectedBed').textContent = '未选择';
+      document.getElementById('bedStatus').textContent = '未选择';
+      document.getElementById('bedStatus').className = 'status status-processing';
+      document.getElementById('roomType').textContent = '-';
+      document.getElementById('monthlyFee').textContent = '-';
+
+      renderBedVisualization();
+      updateConfirmButton();
+    }
+
+    // 更新确认按钮状态
+    function updateConfirmButton() {
+      const confirmBtn = document.getElementById('confirmBtn');
+      if (selectedStudent && selectedBed) {
+        confirmBtn.disabled = false;
+        confirmBtn.style.opacity = '1';
+      } else {
+        confirmBtn.disabled = true;
+        confirmBtn.style.opacity = '0.6';
+      }
+    }
+
+    // 确认分配
+    function confirmAssignment() {
+      if (!selectedStudent) {
+        showMessage('请先选择要分配的学生！', 'error');
+        return;
+      }
+
+      if (!selectedBed) {
+        showMessage('请先选择要分配的床位！', 'error');
+        return;
+      }
+
+      // 检查性别匹配
+      const studentGender = selectedStudent.gender;
+      const buildingGender = selectedBed.gender;
+
+      if (studentGender !== buildingGender) {
+        showMessage(`错误：${studentGender}生不能入住${buildingGender}生宿舍楼！`, 'error');
+        return;
+      }
+
+      // 更新床位数据
+      selectedBed.status = 'occupied';
+      selectedBed.student = { ...selectedStudent };
+
+      // 从待分配列表中移除学生
+      const index = waitingStudents.findIndex(s => s.id === selectedStudent.id);
+      if (index !== -1) {
+        waitingStudents.splice(index, 1);
+      }
+
+      // 更新显示
+      renderBedVisualization();
+      renderStudentTable();
+      updateStatistics();
+      fillManualAssignStudents();
+      fillTransferStudents();
+
+      // 重置选择
+      clearStudentSelection();
+      clearBedSelection();
+
+      showMessage(`成功将${selectedStudent.name}分配到${currentBuilding}号楼-${selectedBed.room}-${selectedBed.bed}床位！`, 'success');
+    }
+
+    // 筛选床位
+    function filterBeds(filter) {
+      currentFilter = filter;
+
+      // 更新按钮状态
+      document.querySelectorAll('.filter-btn').forEach(btn => {
+        btn.classList.remove('active');
+      });
+
+      const filterTextMap = {
+        'all': '全部床位',
+        'vacant': '空余床位',
+        'occupied': '已占床位',
+        'male': '男生楼',
+        'female': '女生楼'
+      };
+
+      document.querySelectorAll('.filter-btn').forEach(btn => {
+        if (btn.textContent.includes(filterTextMap[filter])) {
+          btn.classList.add('active');
+        }
+      });
+
+      // 更新床位显示
+      renderBedVisualization();
+    }
+
+    // 按楼栋筛选
+    function filterByBuilding() {
+      const building = document.getElementById('buildingFilter').value;
+      if (building) {
+        currentBuilding = building;
+        currentFloor = '1'; // 重置到一楼
+        document.getElementById('floorSelect').value = '1';
+        document.getElementById('buildingTitle').textContent = `${building}号楼床位分布`;
+        renderBedVisualization();
+      }
+    }
+
+    // 切换楼层
+    function changeFloor() {
+      currentFloor = document.getElementById('floorSelect').value;
+      renderBedVisualization();
+    }
+
+    // 更新统计信息
+    function updateStatistics() {
+      let maleVacant = 0;
+      let femaleVacant = 0;
+      let totalVacant = 0;
+
+      // 统计所有楼栋的空余床位
+      for (const building in bedData) {
+        const buildingGender = ['1', '3', '5'].includes(building) ? '男' : '女';
+
+        for (const floor in bedData[building]) {
+          bedData[building][floor].forEach(bed => {
+            if (bed.status === 'vacant') {
+              totalVacant++;
+              if (buildingGender === '男') {
+                maleVacant++;
+              } else {
+                femaleVacant++;
+              }
+            }
+          });
+        }
+      }
+
+      document.getElementById('maleVacant').textContent = maleVacant;
+      document.getElementById('femaleVacant').textContent = femaleVacant;
+      document.getElementById('totalVacant').textContent = totalVacant;
+    }
+
+    // 设置搜索功能
+    function setupSearch() {
+      const searchInput = document.getElementById('searchInput');
+      searchInput.addEventListener('input', function (e) {
+        const searchTerm = e.target.value.toLowerCase().trim();
+
+        if (!searchTerm) {
+          renderBedVisualization();
+          renderStudentTable();
+          return;
+        }
+
+        // 搜索床位
+        const beds = bedData[currentBuilding]?.[currentFloor] || [];
+        const bedElements = document.querySelectorAll('.bed-item');
+
+        bedElements.forEach((bedElement, index) => {
+          if (index < beds.length) {
+            const bed = beds[index];
+            const bedText = `${bed.room}-${bed.bed}`.toLowerCase();
+            const studentName = bed.student?.name?.toLowerCase() || '';
+            const shouldShow = bedText.includes(searchTerm) || studentName.includes(searchTerm);
+            bedElement.style.display = shouldShow ? '' : 'none';
+          }
+        });
+
+        // 搜索学生
+        const studentRows = document.querySelectorAll('#studentTableBody tr');
+        waitingStudents.forEach((student, index) => {
+          if (studentRows[index]) {
+            const studentText = `${student.name}${student.id}${student.college}${student.gender}`.toLowerCase();
+            studentRows[index].style.display = studentText.includes(searchTerm) ? '' : 'none';
+          }
+        });
+      });
+    }
+
+    // 智能分配模态框
+    function showAutoAssignModal() {
+      document.getElementById('autoStudentList').innerHTML = waitingStudents.map(student =>
+        `<div style="padding: 8px; border-bottom: 1px solid #e5e7eb; display: flex; justify-content: space-between;">
+          <div>
+            <strong>${student.name}</strong> (${student.id})
+          </div>
+          <div style="color: #6b7280; font-size: 12px;">
+            ${student.college} · ${student.gender}
+          </div>
+        </div>`
+      ).join('');
+
+      document.getElementById('autoStudentCount').textContent = waitingStudents.length;
+
+      // 重置表单
+      document.getElementById('autoGender').value = '';
+      document.getElementById('autoCollege').value = '';
+      document.getElementById('autoBuilding').value = '';
+      document.querySelector('input[name="strategy"][value="sameCollege"]').checked = true;
+      document.getElementById('autoAssignError').style.display = 'none';
+
+      document.getElementById('autoAssignModal').style.display = 'flex';
+    }
+
+    // 执行智能分配
+    function executeAutoAssign() {
+      const gender = document.getElementById('autoGender').value;
+      const college = document.getElementById('autoCollege').value;
+      const building = document.getElementById('autoBuilding').value;
+      const strategy = document.querySelector('input[name="strategy"]:checked').value;
+      const errorElement = document.getElementById('autoAssignError');
+
+      // 筛选符合条件的学生
+      let eligibleStudents = waitingStudents.filter(student => {
+        if (gender && student.gender !== gender) return false;
+        if (college && student.college !== college) return false;
+        return true;
+      });
+
+      if (eligibleStudents.length === 0) {
+        errorElement.textContent = '没有找到符合条件的待分配学生！';
+        errorElement.style.display = 'block';
+        return;
+      }
+
+      // 确定要搜索的宿舍楼
+      let targetBuildings = [];
+      if (building) {
+        targetBuildings = [building];
+      } else {
+        // 根据学生性别自动选择
+        const studentGender = eligibleStudents[0].gender;
+        targetBuildings = studentGender === '男' ? ['1', '3', '5'] : ['2', '4', '6'];
+      }
+
+      // 寻找可用的床位
+      let availableBeds = [];
+
+      for (const targetBuilding of targetBuildings) {
+        if (!bedData[targetBuilding]) continue;
+
+        for (const floor in bedData[targetBuilding]) {
+          const bedsOnFloor = bedData[targetBuilding][floor];
+          const vacantBeds = bedsOnFloor.filter(bed => bed.status === 'vacant');
+
+          // 根据策略筛选床位
+          let filteredBeds = vacantBeds;
+          if (strategy === 'sameCollege' && college) {
+            // 优先选择同学院学生较少的房间
+            filteredBeds = sortBedsByCollege(bedsOnFloor, vacantBeds, college);
+          } else if (strategy === 'floor') {
+            // 按楼层顺序分配
+            filteredBeds = vacantBeds.sort((a, b) => a.room - b.room);
+          }
+
+          availableBeds = availableBeds.concat(filteredBeds.map(bed => ({
+            ...bed,
+            building: targetBuilding,
+            floor
+          })));
+        }
+      }
+
+      if (availableBeds.length === 0) {
+        errorElement.textContent = '没有找到可用的床位！';
+        errorElement.style.display = 'block';
+        return;
+      }
+
+      // 执行分配
+      let assignedCount = 0;
+      const maxAssign = Math.min(eligibleStudents.length, availableBeds.length);
+
+      for (let i = 0; i < maxAssign; i++) {
+        const student = eligibleStudents[i];
+        const bed = availableBeds[i];
+
+        // 检查性别匹配
+        const buildingGender = bed.gender;
+        if (student.gender !== buildingGender) {
+          continue; // 跳过不匹配的
+        }
+
+        // 分配床位
+        bed.status = 'occupied';
+        bed.student = { ...student };
+
+        // 从待分配列表中移除
+        const index = waitingStudents.findIndex(s => s.id === student.id);
+        if (index !== -1) {
+          waitingStudents.splice(index, 1);
+        }
+
+        assignedCount++;
+      }
+
+      if (assignedCount === 0) {
+        errorElement.textContent = '没有成功分配任何学生！请检查性别匹配。';
+        errorElement.style.display = 'block';
+        return;
+      }
+
+      // 更新显示
+      renderBedVisualization();
+      renderStudentTable();
+      updateStatistics();
+      fillManualAssignStudents();
+      fillTransferStudents();
+
+      closeModal('autoAssignModal');
+      showMessage(`智能分配完成！成功分配 ${assignedCount} 名学生。`, 'success');
+    }
+
+    // 按学院排序床位
+    function sortBedsByCollege(allBeds, vacantBeds, targetCollege) {
+      // 统计每个房间的同学院人数
+      const roomCollegeCount = {};
+
+      allBeds.forEach(bed => {
+        if (bed.status === 'occupied' && bed.student && bed.student.college === targetCollege) {
+          if (!roomCollegeCount[bed.room]) {
+            roomCollegeCount[bed.room] = 0;
+          }
+          roomCollegeCount[bed.room]++;
+        }
+      });
+
+      // 按同学院人数升序排序（优先分配到同学院人数少的房间）
+      return vacantBeds.sort((a, b) => {
+        const countA = roomCollegeCount[a.room] || 0;
+        const countB = roomCollegeCount[b.room] || 0;
+        return countA - countB;
+      });
+    }
+
+    // 手动分配模态框
+    function showManualAssignModal() {
+      document.getElementById('manualAssignModal').style.display = 'flex';
+      document.getElementById('manualAssignError').style.display = 'none';
+      document.getElementById('manualStudentInfo').style.display = 'none';
+
+      // 重置表单
+      document.getElementById('manualAssignForm').reset();
+      document.getElementById('manualRoom').innerHTML = '<option value="">请选择房间</option>';
+      document.getElementById('manualBed').innerHTML = '<option value="">请选择床位</option>';
+    }
+
+    // 填充手动分配学生选项
+    function fillManualAssignStudents() {
+      const select = document.getElementById('manualStudent');
+      select.innerHTML = '<option value="">请选择学生</option>' +
+        waitingStudents.map(student =>
+          `<option value="${student.id}" data-gender="${student.gender}" data-college="${student.college}">
+            ${student.name} (${student.id}) - ${student.college}
+          </option>`
+        ).join('');
+    }
+
+    // 更新手动分配学生信息
+    function updateManualStudentInfo() {
+      const studentId = document.getElementById('manualStudent').value;
+      const studentInfoDiv = document.getElementById('manualStudentInfo');
+
+      if (!studentId) {
+        studentInfoDiv.style.display = 'none';
+        return;
+      }
+
+      const student = waitingStudents.find(s => s.id === studentId);
+      if (student) {
+        document.getElementById('manualGender').textContent = student.gender;
+        document.getElementById('manualCollege').textContent = student.college;
+        studentInfoDiv.style.display = 'block';
+
+        // 自动选择对应的宿舍楼
+        const buildingSelect = document.getElementById('manualBuilding');
+        buildingSelect.value = student.gender === '男' ? '3' : '2';
+        loadAvailableRooms();
+      }
+    }
+
+    // 加载可用房间
+    function loadAvailableRooms() {
+      const building = document.getElementById('manualBuilding').value;
+      const floor = document.getElementById('manualFloor').value;
+      const roomSelect = document.getElementById('manualRoom');
+
+      if (!building || !floor) {
+        roomSelect.innerHTML = '<option value="">请选择房间</option>';
+        return;
+      }
+
+      const rooms = new Set();
+      const beds = bedData[building]?.[floor] || [];
+
+      beds.forEach(bed => {
+        if (bed.status === 'vacant') {
+          rooms.add(bed.room);
+        }
+      });
+
+      roomSelect.innerHTML = '<option value="">请选择房间</option>' +
+        Array.from(rooms).sort((a, b) => a - b).map(room =>
+          `<option value="${room}">${room}号房间</option>`
+        ).join('');
+
+      // 清空床位选择
+      document.getElementById('manualBed').innerHTML = '<option value="">请选择床位</option>';
+    }
+
+    // 加载可用床位
+    function loadAvailableBeds() {
+      const building = document.getElementById('manualBuilding').value;
+      const floor = document.getElementById('manualFloor').value;
+      const room = document.getElementById('manualRoom').value;
+      const bedSelect = document.getElementById('manualBed');
+
+      if (!building || !floor || !room) {
+        bedSelect.innerHTML = '<option value="">请选择床位</option>';
+        return;
+      }
+
+      const beds = bedData[building]?.[floor] || [];
+      const availableBeds = beds.filter(bed =>
+        bed.room === room && bed.status === 'vacant'
+      );
+
+      bedSelect.innerHTML = '<option value="">请选择床位</option>' +
+        availableBeds.map(bed =>
+          `<option value="${bed.bed}">${bed.bed}号床</option>`
+        ).join('');
+    }
+
+    // 手动分配表单提交
+    document.getElementById('manualAssignForm').addEventListener('submit', function (e) {
+      e.preventDefault();
+
+      const studentId = document.getElementById('manualStudent').value;
+      const building = document.getElementById('manualBuilding').value;
+      const floor = document.getElementById('manualFloor').value;
+      const room = document.getElementById('manualRoom').value;
+      const bedNum = document.getElementById('manualBed').value;
+      const errorElement = document.getElementById('manualAssignError');
+
+      // 验证输入
+      if (!studentId || !building || !floor || !room || !bedNum) {
+        errorElement.textContent = '请填写所有必填项！';
+        errorElement.style.display = 'block';
+        return;
+      }
+
+      // 查找学生
+      const student = waitingStudents.find(s => s.id === studentId);
+      if (!student) {
+        errorElement.textContent = '未找到选中的学生！';
+        errorElement.style.display = 'block';
+        return;
+      }
+
+      // 检查性别匹配
+      const buildingGender = ['1', '3', '5'].includes(building) ? '男' : '女';
+      if (student.gender !== buildingGender) {
+        errorElement.textContent = `错误：${student.gender}生不能入住${buildingGender}生宿舍楼！`;
+        errorElement.style.display = 'block';
+        return;
+      }
+
+      // 查找床位
+      const beds = bedData[building]?.[floor] || [];
+      const bed = beds.find(b => b.room === room && b.bed === bedNum);
+
+      if (!bed) {
+        errorElement.textContent = '未找到选中的床位！';
+        errorElement.style.display = 'block';
+        return;
+      }
+
+      if (bed.status !== 'vacant') {
+        errorElement.textContent = '该床位已被占用或不可用！';
+        errorElement.style.display = 'block';
+        return;
+      }
+
+      // 分配床位
+      bed.status = 'occupied';
+      bed.student = { ...student };
+
+      // 从待分配列表中移除学生
+      const index = waitingStudents.findIndex(s => s.id === studentId);
+      if (index !== -1) {
+        waitingStudents.splice(index, 1);
+      }
+
+      // 更新显示
+      renderBedVisualization();
+      renderStudentTable();
+      updateStatistics();
+      fillManualAssignStudents();
+      fillTransferStudents();
+
+      closeModal('manualAssignModal');
+      showMessage(`成功将${student.name}分配到${building}号楼${floor}楼${room}房间${bedNum}号床！`, 'success');
+    });
+
+    // 调宿处理模态框
+    function showTransferModal() {
+      document.getElementById('transferModal').style.display = 'flex';
+      document.getElementById('transferError').style.display = 'none';
+      document.getElementById('currentBedInfo').style.display = 'none';
+
+      // 重置表单
+      document.getElementById('transferBuilding').value = '';
+      document.getElementById('transferFloor').value = '';
+      document.getElementById('transferRoom').innerHTML = '<option value="">请选择房间</option>';
+      document.getElementById('transferBed').innerHTML = '<option value="">请选择床位</option>';
+    }
+
+    // 填充调宿学生选项
+    function fillTransferStudents() {
+      const select = document.getElementById('transferStudent');
+      // 收集所有已入住的学生
+      let allStudents = [];
+
+      for (const building in bedData) {
+        for (const floor in bedData[building]) {
+          bedData[building][floor].forEach(bed => {
+            if (bed.status === 'occupied' && bed.student) {
+              allStudents.push({
+                ...bed.student,
+                building,
+                floor,
+                room: bed.room,
+                bed: bed.bed
+              });
+            }
+          });
+        }
+      }
+
+      select.innerHTML = '<option value="">请选择学生</option>' +
+        allStudents.map(student =>
+          `<option value="${student.id}" data-building="${student.building}" 
+                  data-floor="${student.floor}" data-room="${student.room}" 
+                  data-bed="${student.bed}" data-gender="${student.gender}" 
+                  data-college="${student.college}">
+            ${student.name} (${student.id}) - ${student.building}号楼${student.floor}楼${student.room}房间${student.bed}号床
+          </option>`
+        ).join('');
+    }
+
+    // 加载当前床位信息
+    function loadCurrentBedInfo() {
+      const studentSelect = document.getElementById('transferStudent');
+      const studentId = studentSelect.value;
+      const currentBedInfoDiv = document.getElementById('currentBedInfo');
+
+      if (!studentId) {
+        currentBedInfoDiv.style.display = 'none';
+        return;
+      }
+
+      const selectedOption = studentSelect.selectedOptions[0];
+      const building = selectedOption.dataset.building;
+      const floor = selectedOption.dataset.floor;
+      const room = selectedOption.dataset.room;
+      const bed = selectedOption.dataset.bed;
+      const gender = selectedOption.dataset.gender;
+      const college = selectedOption.dataset.college;
+
+      document.getElementById('currentBedLocation').textContent =
+        `${building}号楼${floor}楼${room}房间${bed}号床`;
+      document.getElementById('currentStudentGender').textContent = gender;
+      document.getElementById('currentStudentCollege').textContent = college;
+
+      // 查找室友
+      const beds = bedData[building]?.[floor] || [];
+      const roommates = beds
+        .filter(b =>
+          b.room === room &&
+          b.status === 'occupied' &&
+          b.student &&
+          b.student.id !== studentId
+        )
+        .map(b => b.student.name)
+        .join('、');
+
+      document.getElementById('currentRoommates').textContent = roommates || '无';
+      currentBedInfoDiv.style.display = 'block';
+    }
+
+    // 加载调宿可用房间
+    function loadTransferRooms() {
+      const building = document.getElementById('transferBuilding').value;
+      const floor = document.getElementById('transferFloor').value;
+      const roomSelect = document.getElementById('transferRoom');
+
+      if (!building || !floor) {
+        roomSelect.innerHTML = '<option value="">请选择房间</option>';
+        return;
+      }
+
+      const rooms = new Set();
+      const beds = bedData[building]?.[floor] || [];
+
+      beds.forEach(bed => {
+        if (bed.status === 'vacant') {
+          rooms.add(bed.room);
+        }
+      });
+
+      roomSelect.innerHTML = '<option value="">请选择房间</option>' +
+        Array.from(rooms).sort((a, b) => a - b).map(room =>
+          `<option value="${room}">${room}号房间</option>`
+        ).join('');
+
+      // 清空床位选择
+      document.getElementById('transferBed').innerHTML = '<option value="">请选择床位</option>';
+    }
+
+    // 加载调宿可用床位
+    function loadTransferBeds() {
+      const building = document.getElementById('transferBuilding').value;
+      const floor = document.getElementById('transferFloor').value;
+      const room = document.getElementById('transferRoom').value;
+      const bedSelect = document.getElementById('transferBed');
+
+      if (!building || !floor || !room) {
+        bedSelect.innerHTML = '<option value="">请选择床位</option>';
+        return;
+      }
+
+      const beds = bedData[building]?.[floor] || [];
+      const availableBeds = beds.filter(bed =>
+        bed.room === room && bed.status === 'vacant'
+      );
+
+      bedSelect.innerHTML = '<option value="">请选择床位</option>' +
+        availableBeds.map(bed =>
+          `<option value="${bed.bed}">${bed.bed}号床</option>`
+        ).join('');
+    }
+
+    // 执行调宿
+    function executeTransfer() {
+      const studentSelect = document.getElementById('transferStudent');
+      const studentId = studentSelect.value;
+      const newBuilding = document.getElementById('transferBuilding').value;
+      const newFloor = document.getElementById('transferFloor').value;
+      const newRoom = document.getElementById('transferRoom').value;
+      const newBedNum = document.getElementById('transferBed').value;
+      const errorElement = document.getElementById('transferError');
+
+      if (!studentId || !newBuilding || !newFloor || !newRoom || !newBedNum) {
+        errorElement.textContent = '请填写所有必填项！';
+        errorElement.style.display = 'block';
+        return;
+      }
+
+      // 获取学生信息
+      const selectedOption = studentSelect.selectedOptions[0];
+      const oldBuilding = selectedOption.dataset.building;
+      const oldFloor = selectedOption.dataset.floor;
+      const oldRoom = selectedOption.dataset.room;
+      const oldBedNum = selectedOption.dataset.bed;
+      const studentGender = selectedOption.dataset.gender;
+
+      // 检查性别匹配
+      const newBuildingGender = ['1', '3', '5'].includes(newBuilding) ? '男' : '女';
+      if (studentGender !== newBuildingGender) {
+        errorElement.textContent = `错误：${studentGender}生不能入住${newBuildingGender}生宿舍楼！`;
+        errorElement.style.display = 'block';
+        return;
+      }
+
+      // 检查不能调换到同一个床位
+      if (oldBuilding === newBuilding && oldFloor === newFloor && oldRoom === newRoom && oldBedNum === newBedNum) {
+        errorElement.textContent = '新床位不能与当前床位相同！';
+        errorElement.style.display = 'block';
+        return;
+      }
+
+      // 查找原床位
+      const oldBeds = bedData[oldBuilding]?.[oldFloor] || [];
+      const oldBed = oldBeds.find(b => b.room === oldRoom && b.bed === oldBedNum);
+
+      if (!oldBed || oldBed.status !== 'occupied' || !oldBed.student) {
+        errorElement.textContent = '原床位信息错误！';
+        errorElement.style.display = 'block';
+        return;
+      }
+
+      const student = oldBed.student;
+
+      // 检查新床位是否可用
+      const newBeds = bedData[newBuilding]?.[newFloor] || [];
+      const newBed = newBeds.find(b => b.room === newRoom && b.bed === newBedNum);
+
+      if (!newBed) {
+        errorElement.textContent = '未找到选中的新床位！';
+        errorElement.style.display = 'block';
+        return;
+      }
+
+      if (newBed.status !== 'vacant') {
+        errorElement.textContent = '新床位已被占用或不可用！';
+        errorElement.style.display = 'block';
+        return;
+      }
+
+      // 执行调换
+      oldBed.status = 'vacant';
+      oldBed.student = null;
+
+      newBed.status = 'occupied';
+      newBed.student = student;
+
+      // 更新显示
+      renderBedVisualization();
+      fillTransferStudents();
+
+      closeModal('transferModal');
+      showMessage(`调宿成功！${student.name}已从${oldBuilding}号楼${oldFloor}楼${oldRoom}房间${oldBedNum}号床调换到${newBuilding}号楼${newFloor}楼${newRoom}房间${newBedNum}号床。`, 'success');
+    }
+
+    // 导出床位数据
+    function exportBedData() {
+      const data = [];
+
+      for (const building in bedData) {
+        for (const floor in bedData[building]) {
+          bedData[building][floor].forEach(bed => {
+            data.push({
+              楼栋: building + '号楼',
+              楼层: floor + '楼',
+              房间: bed.room,
+              床位: bed.bed + '号床',
+              状态: bed.status === 'vacant' ? '空余' :
+                bed.status === 'occupied' ? '已占' :
+                  bed.status === 'maintenance' ? '维修中' : '保留',
+              学生姓名: bed.student?.name || '',
+              学号: bed.student?.id || '',
+              性别: bed.student?.gender || '',
+              学院: bed.student?.college || '',
+              房间类型: bed.type,
+              月费: bed.fee + '元'
+            });
+          });
+        }
+      }
+
+      // 创建CSV内容
+      const headers = ['楼栋', '楼层', '房间', '床位', '状态', '学生姓名', '学号', '性别', '学院', '房间类型', '月费'];
+      const csvContent = [
+        headers.join(','),
+        ...data.map(row => headers.map(header => `"${row[header] || ''}"`).join(','))
+      ].join('\n');
+
+      // 创建下载链接
+      const blob = new Blob(['\ufeff' + csvContent], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      const timestamp = new Date().toISOString().slice(0, 10).replace(/-/g, '');
+      link.download = `床位分配表_${timestamp}.csv`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
+
+      showMessage('床位分配表已成功导出为CSV文件！', 'success');
+    }
+
+    // 显示消息
+    function showMessage(message, type = 'info') {
+      // 创建消息元素
+      const messageDiv = document.createElement('div');
+      messageDiv.style.cssText = `
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        padding: 15px 20px;
+        border-radius: 8px;
+        color: white;
+        font-weight: 500;
+        z-index: 10000;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        animation: slideIn 0.3s ease;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      `;
+
+      // 设置样式
+      if (type === 'success') {
+        messageDiv.style.background = 'linear-gradient(135deg, #10b981 0%, #059669 100%)';
+      } else if (type === 'error') {
+        messageDiv.style.background = 'linear-gradient(135deg, #ef4444 0%, #dc2626 100%)';
+      } else {
+        messageDiv.style.background = 'linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%)';
+      }
+
+      messageDiv.innerHTML = `
+        <i class="fas ${type === 'success' ? 'fa-check-circle' : type === 'error' ? 'fa-exclamation-circle' : 'fa-info-circle'}"></i>
+        <span>${message}</span>
+      `;
+
+      document.body.appendChild(messageDiv);
+
+      // 3秒后移除
+      setTimeout(() => {
+        messageDiv.style.animation = 'slideOut 0.3s ease';
+        setTimeout(() => {
+          if (messageDiv.parentNode) {
+            document.body.removeChild(messageDiv);
+          }
+        }, 300);
+      }, 3000);
+
+      // 添加动画样式
+      if (!document.getElementById('message-animations')) {
+        const style = document.createElement('style');
+        style.id = 'message-animations';
+        style.textContent = `
+          @keyframes slideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+          }
+          @keyframes slideOut {
+            from { transform: translateX(0); opacity: 1; }
+            to { transform: translateX(100%); opacity: 0; }
+          }
+        `;
+        document.head.appendChild(style);
+      }
+    }
+
+    // 关闭模态框
+    function closeModal(modalId) {
+      document.getElementById(modalId).style.display = 'none';
+    }
+
+    // 点击模态框外部关闭
+    document.querySelectorAll('.modal-overlay').forEach(modal => {
+      modal.addEventListener('click', function (e) {
+        if (e.target === modal) {
+          modal.style.display = 'none';
+        }
+      });
+    });
+  </script>
+</body>
+
+</html>

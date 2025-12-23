@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>宿舍管理系统 - 首页</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700&display=swap">
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+  <div class="container">
+    <!-- 侧边栏 -->
+    <aside class="sidebar">
+      <div class="logo-area">
+        <div class="logo">
+          <i class="fas fa-hotel"></i>
+          <span>宿舍管理系统</span>
+        </div>
+        <div class="campus-info">四川工商学院学生宿舍管理中心</div>
+      </div>
+      <ul class="nav-links">
+        <li><a href="index.html"><i class="fas fa-home"></i><span>系统首页</span></a></li>
+        <li><a href="dorm-management.html"><i class="fas fa-building"></i><span>宿舍楼管理</span></a></li>
+        <li><a href="student.html"><i class="fas fa-user-friends"></i><span>住宿学生</span></a></li>
+        <li><a href="bed-assignment.html"><i class="fas fa-bed"></i><span>床位分配</span></a></li>
+        <li><a href="repair.html"><i class="fas fa-tools"></i><span>报修管理</span></a></li>
+        <li><a href="visitor.html"><i class="fas fa-user-check"></i><span>访客登记</span></a></li>
+        <li><a href="statistics.html"><i class="fas fa-chart-bar"></i><span>数据统计</span></a></li>
+        <li><a href="settings.html"><i class="fas fa-cog"></i><span>系统设置</span></a></li>
+      </ul>
+    </aside>
+
+    <!-- 主内容区 -->
+    <main class="main-content">
+      <header>
+        <div class="header-title">
+          <h1>宿舍管理系统</h1>
+          <p>宿舍分配、住宿管理、报修服务一站式平台</p>
+        </div>
+        <div class="header-controls">
+          <div class="search-bar">
+            <i class="fas fa-search"></i>
+            <input type="text" placeholder="搜索宿舍、学生或报修记录...">
+          </div>
+          <div class="user-info">
+            <div class="user-avatar">
+              <i class="fas fa-user-tie"></i>
+            </div>
+            <div class="user-details">
+              <h3>李管理员</h3>
+              <p>宿舍管理中心</p>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <!-- 统计卡片 -->
+      <section class="dashboard-cards">
+        <div class="card card-1">
+          <div class="card-header">
+            <h3 class="card-title">总床位数量</h3>
+            <div class="card-icon">
+              <i class="fas fa-bed"></i>
+            </div>
+          </div>
+          <div class="card-body">
+            <h2>4,236</h2>
+            <p>已占用: 3,847 (90.8%)</p>
+          </div>
+        </div>
+
+        <div class="card card-2">
+          <div class="card-header">
+            <h3 class="card-title">空余床位</h3>
+            <div class="card-icon">
+              <i class="fas fa-door-open"></i>
+            </div>
+          </div>
+          <div class="card-body">
+            <h2>389</h2>
+            <p>女生楼: 142 | 男生楼: 247</p>
+          </div>
+        </div>
+
+        <div class="card card-3">
+          <div class="card-header">
+            <h3 class="card-title">待处理报修</h3>
+            <div class="card-icon">
+              <i class="fas fa-tools"></i>
+            </div>
+          </div>
+          <div class="card-body">
+            <h2>24</h2>
+            <p>其中紧急报修: 5项</p>
+          </div>
+        </div>
+
+        <div class="card card-4">
+          <div class="card-header">
+            <h3 class="card-title">今日访客</h3>
+            <div class="card-icon">
+              <i class="fas fa-user-check"></i>
+            </div>
+          </div>
+          <div class="card-body">
+            <h2>67</h2>
+            <p>已登记: 67 | 未离开: 12</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- 主要功能区域 -->
+      <section class="main-features">
+        <!-- 宿舍楼分布模块 -->
+        <div class="feature-card">
+          <h2 class="feature-title"><i class="fas fa-building"></i> 宿舍楼分布</h2>
+          <div class="dorm-buildings">
+            <div class="building-card">
+              <div class="building-header">
+                <div class="building-name">1号宿舍楼</div>
+                <div class="building-type type-male">男生楼</div>
+              </div>
+              <p style="font-size: 14px; color: #64748b;">建成时间: 2015年 | 楼层: 6层</p>
+              <div class="building-info">
+                <div class="info-item">
+                  <div class="info-value">324</div>
+                  <div class="info-label">总床位</div>
+                </div>
+                <div class="info-item">
+                  <div class="info-value">36</div>
+                  <div class="info-label">空床位</div>
+                </div>
+                <div class="info-item">
+                  <div class="info-value">92%</div>
+                  <div class="info-label">入住率</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="building-card">
+              <div class="building-header">
+                <div class="building-name">2号宿舍楼</div>
+                <div class="building-type type-female">女生楼</div>
+              </div>
+              <p style="font-size: 14px; color: #64748b;">建成时间: 2018年 | 楼层: 7层</p>
+              <div class="building-info">
+                <div class="info-item">
+                  <div class="info-value">378</div>
+                  <div class="info-label">总床位</div>
+                </div>
+                <div class="info-item">
+                  <div class="info-value">28</div>
+                  <div class="info-label">空床位</div>
+                </div>
+                <div class="info-item">
+                  <div class="info-value">93%</div>
+                  <div class="info-label">入住率</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 住宿学生模块 -->
+        <div class="feature-card">
+          <h2 class="feature-title"><i class="fas fa-user-friends"></i> 住宿学生 (最近添加)</h2>
+          <div class="student-list">
+            <div class="student-item">
+              <div class="student-avatar">张</div>
+              <div class="student-info">
+                <h4>张明</h4>
+                <p>计算机学院 | 学号: 2023001</p>
+              </div>
+              <div class="student-dorm">
+                <div class="dorm-room">3号楼-408-2</div>
+                <div class="dorm-building">男生楼 | 4楼</div>
+              </div>
+            </div>
+
+            <div class="student-item">
+              <div class="student-avatar">王</div>
+              <div class="student-info">
+                <h4>王丽</h4>
+                <p>外国语学院 | 学号: 2023002</p>
+              </div>
+              <div class="student-dorm">
+                <div class="dorm-room">2号楼-512-3</div>
+                <div class="dorm-building">女生楼 | 5楼</div>
+              </div>
+            </div>
+          </div>
+          <div style="text-align: center; margin-top: 15px;">
+            <a href="student.html" class="btn btn-primary">查看所有学生</a>
+          </div>
+        </div>
+      </section>
+
+      <footer class="footer">
+        <p>© 2023 四川工商学院宿舍管理中心. 版权所有. 系统版本: 2.1.0</p>
+        <p style="margin-top: 8px;">服务热线: 0531-88888888 | 技术支持: 信息中心</p>
+      </footer>
+    </main>
+  </div>
+
+  <script src="./common.js"></script>
+  <script>
+    // 页面特定JavaScript
+    document.addEventListener('DOMContentLoaded', function () {
+      // 宿舍楼卡片点击效果
+      const buildingCards = document.querySelectorAll('.building-card');
+      buildingCards.forEach(card => {
+        card.addEventListener('click', function () {
+          window.location.href = 'dorm-management.html';
+        });
+      });
+
+      // 学生列表点击效果
+      const studentItems = document.querySelectorAll('.student-item');
+      studentItems.forEach(item => {
+        item.addEventListener('click', function () {
+          window.location.href = 'student.html';
+        });
+      });
+    });
+  </script>
+</body>
+
+</html>

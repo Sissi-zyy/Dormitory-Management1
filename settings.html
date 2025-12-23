@@ -1,0 +1,2010 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>宿舍管理系统 - 系统设置</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700&display=swap">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Noto Sans SC', sans-serif;
+      background-color: #f5f7fa;
+      color: #333;
+      line-height: 1.6;
+    }
+
+    .container {
+      display: flex;
+      min-height: 100vh;
+    }
+
+    /* 侧边栏样式 */
+    .sidebar {
+      width: 240px;
+      background: linear-gradient(180deg, #1e3c72 0%, #2a5298 100%);
+      color: white;
+      padding: 20px 0;
+      box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+      z-index: 100;
+    }
+
+    .logo-area {
+      padding: 0 20px 30px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      font-size: 20px;
+      font-weight: 700;
+      margin-bottom: 10px;
+    }
+
+    .logo i {
+      margin-right: 12px;
+      font-size: 24px;
+    }
+
+    .campus-info {
+      font-size: 12px;
+      opacity: 0.8;
+      padding-left: 36px;
+    }
+
+    .nav-links {
+      list-style: none;
+      padding: 20px 0;
+    }
+
+    .nav-links li {
+      margin: 5px 0;
+    }
+
+    .nav-links a {
+      display: flex;
+      align-items: center;
+      padding: 12px 20px;
+      color: rgba(255, 255, 255, 0.8);
+      text-decoration: none;
+      transition: all 0.3s;
+      border-left: 4px solid transparent;
+    }
+
+    .nav-links a:hover,
+    .nav-links a.active {
+      background: rgba(255, 255, 255, 0.1);
+      color: white;
+      border-left-color: #4CAF50;
+    }
+
+    .nav-links i {
+      width: 24px;
+      margin-right: 12px;
+      font-size: 16px;
+    }
+
+    /* 主要内容区域 */
+    .main-content {
+      flex: 1;
+      padding: 20px;
+      overflow-y: auto;
+    }
+
+    /* 头部样式 */
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 30px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid #e0e6ef;
+    }
+
+    .header-title h1 {
+      font-size: 28px;
+      color: #2c3e50;
+      margin-bottom: 5px;
+    }
+
+    .header-title p {
+      color: #7f8c8d;
+      font-size: 14px;
+    }
+
+    .header-controls {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .search-bar {
+      position: relative;
+      background: white;
+      border-radius: 25px;
+      padding: 8px 15px 8px 40px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+      border: 1px solid #e0e6ef;
+    }
+
+    .search-bar i {
+      position: absolute;
+      left: 15px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #95a5a6;
+    }
+
+    .search-bar input {
+      border: none;
+      outline: none;
+      width: 200px;
+      background: transparent;
+    }
+
+    .user-info {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .user-avatar {
+      width: 40px;
+      height: 40px;
+      background: #3498db;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+    }
+
+    .user-details h3 {
+      font-size: 16px;
+      font-weight: 600;
+    }
+
+    .user-details p {
+      font-size: 12px;
+      color: #7f8c8d;
+    }
+
+    /* 设置页面容器 */
+    .settings-container {
+      display: flex;
+      gap: 30px;
+      margin-bottom: 30px;
+    }
+
+    @media (max-width: 1024px) {
+      .settings-container {
+        flex-direction: column;
+      }
+    }
+
+    /* 设置侧边栏 */
+    .settings-sidebar {
+      width: 280px;
+      flex-shrink: 0;
+    }
+
+    @media (max-width: 1024px) {
+      .settings-sidebar {
+        width: 100%;
+      }
+    }
+
+    .settings-menu {
+      list-style: none;
+      background: white;
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+      margin-bottom: 20px;
+    }
+
+    .settings-menu li {
+      border-bottom: 1px solid #e0e6ef;
+    }
+
+    .settings-menu li:last-child {
+      border-bottom: none;
+    }
+
+    .settings-menu a {
+      display: flex;
+      align-items: center;
+      padding: 15px 20px;
+      color: #2c3e50;
+      text-decoration: none;
+      transition: all 0.3s;
+    }
+
+    .settings-menu a:hover {
+      background: #f8f9fa;
+    }
+
+    .settings-menu a.active {
+      background: #e3f2fd;
+      color: #1976d2;
+      border-left: 4px solid #1976d2;
+    }
+
+    .settings-menu i {
+      width: 20px;
+      margin-right: 12px;
+      font-size: 16px;
+    }
+
+    /* 设置内容区域 */
+    .settings-content {
+      flex: 1;
+    }
+
+    .settings-section {
+      display: none;
+    }
+
+    .settings-section.active {
+      display: block;
+      animation: fadeIn 0.3s ease;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+      }
+
+      to {
+        opacity: 1;
+      }
+    }
+
+    .setting-item {
+      background: white;
+      padding: 25px;
+      border-radius: 10px;
+      box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+      margin-bottom: 25px;
+    }
+
+    .setting-title {
+      font-size: 20px;
+      font-weight: 600;
+      color: #2c3e50;
+      margin-bottom: 8px;
+    }
+
+    .setting-description {
+      color: #7f8c8d;
+      font-size: 14px;
+      margin-bottom: 20px;
+    }
+
+    /* 数据表格 */
+    .data-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 15px;
+    }
+
+    .data-table th {
+      background: #f8f9fa;
+      padding: 12px 15px;
+      text-align: left;
+      font-weight: 600;
+      color: #2c3e50;
+      border-bottom: 2px solid #e0e6ef;
+    }
+
+    .data-table td {
+      padding: 12px 15px;
+      border-bottom: 1px solid #e0e6ef;
+    }
+
+    .data-table tr:hover {
+      background: #f8f9fa;
+    }
+
+    /* 状态标签 */
+    .status {
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    .status-pending {
+      background: #fff8e1;
+      color: #f39c12;
+    }
+
+    .status-processing {
+      background: #e3f2fd;
+      color: #2196f3;
+    }
+
+    .status-completed {
+      background: #e8f5e9;
+      color: #27ae60;
+    }
+
+    /* 用户角色标签 */
+    .user-role {
+      padding: 2px 8px;
+      background: #e3f2fd;
+      color: #1976d2;
+      border-radius: 10px;
+      font-size: 11px;
+      margin-left: 8px;
+    }
+
+    /* 按钮样式 */
+    .btn {
+      padding: 8px 16px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-weight: 500;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.3s;
+      font-family: 'Noto Sans SC', sans-serif;
+    }
+
+    .btn-primary {
+      background: #3498db;
+      color: white;
+    }
+
+    .btn-success {
+      background: #27ae60;
+      color: white;
+    }
+
+    .btn-warning {
+      background: #f39c12;
+      color: white;
+    }
+
+    .btn-danger {
+      background: #e74c3c;
+      color: white;
+    }
+
+    .btn-sm {
+      padding: 5px 10px;
+      font-size: 13px;
+    }
+
+    .btn:hover {
+      opacity: 0.9;
+      transform: translateY(-1px);
+    }
+
+    /* 表单控件 */
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 500;
+      color: #2c3e50;
+    }
+
+    .form-control {
+      width: 100%;
+      padding: 10px 15px;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      font-family: 'Noto Sans SC', sans-serif;
+      transition: border 0.3s;
+    }
+
+    .form-control:focus {
+      outline: none;
+      border-color: #3498db;
+      box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
+    }
+
+    /* 开关控件 */
+    .switch {
+      position: relative;
+      display: inline-block;
+      width: 50px;
+      height: 26px;
+    }
+
+    .switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    .slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: #ccc;
+      transition: .4s;
+      border-radius: 34px;
+    }
+
+    .slider:before {
+      position: absolute;
+      content: "";
+      height: 18px;
+      width: 18px;
+      left: 4px;
+      bottom: 4px;
+      background-color: white;
+      transition: .4s;
+      border-radius: 50%;
+    }
+
+    input:checked+.slider {
+      background-color: #3498db;
+    }
+
+    input:checked+.slider:before {
+      transform: translateX(24px);
+    }
+
+    /* 密码强度检测 */
+    .password-strength {
+      margin-top: 8px;
+    }
+
+    .strength-meter {
+      height: 6px;
+      background: #e0e6ef;
+      border-radius: 3px;
+      overflow: hidden;
+      transition: all 0.3s;
+    }
+
+    .strength-meter.weak {
+      background: linear-gradient(90deg, #e74c3c 0%, #e74c3c 33%, #e0e6ef 33%, #e0e6ef 100%);
+    }
+
+    .strength-meter.medium {
+      background: linear-gradient(90deg, #f39c12 0%, #f39c12 66%, #e0e6ef 66%, #e0e6ef 100%);
+    }
+
+    .strength-meter.strong {
+      background: linear-gradient(90deg, #27ae60 0%, #27ae60 100%);
+    }
+
+    /* 备份状态 */
+    .backup-status {
+      display: flex;
+      align-items: center;
+      padding: 10px;
+      background: #f8f9fa;
+      border-radius: 8px;
+      margin-bottom: 10px;
+    }
+
+    .backup-status i {
+      font-size: 24px;
+      color: #3498db;
+      margin-right: 15px;
+    }
+
+    .backup-success {
+      font-size: 12px;
+      color: #27ae60;
+    }
+
+    .backup-failed {
+      font-size: 12px;
+      color: #e74c3c;
+    }
+
+    /* 系统信息 */
+    .system-info {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 15px;
+    }
+
+    .info-item {
+      display: flex;
+      justify-content: space-between;
+      padding: 12px 0;
+      border-bottom: 1px solid #e0e6ef;
+    }
+
+    .info-item:last-child {
+      border-bottom: none;
+    }
+
+    /* 页脚 */
+    .footer {
+      margin-top: 40px;
+      padding-top: 20px;
+      border-top: 1px solid #e0e6ef;
+      text-align: center;
+      color: #7f8c8d;
+      font-size: 14px;
+    }
+
+    /* 模态框 */
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 1000;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .modal-content {
+      background: white;
+      padding: 30px;
+      border-radius: 10px;
+      width: 90%;
+      max-width: 500px;
+      max-height: 80vh;
+      overflow-y: auto;
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .modal-header h3 {
+      color: #2c3e50;
+    }
+
+    .close-btn {
+      background: none;
+      border: none;
+      font-size: 24px;
+      cursor: pointer;
+      color: #95a5a6;
+    }
+
+    /* 响应式设计 */
+    @media (max-width: 768px) {
+      .container {
+        flex-direction: column;
+      }
+
+      .sidebar {
+        width: 100%;
+        padding: 15px;
+      }
+
+      .nav-links {
+        display: flex;
+        overflow-x: auto;
+        padding: 10px 0;
+      }
+
+      .nav-links li {
+        flex-shrink: 0;
+      }
+
+      .nav-links a {
+        padding: 10px;
+        border-left: none;
+        border-bottom: 3px solid transparent;
+      }
+
+      .nav-links a:hover,
+      .nav-links a.active {
+        border-left: none;
+        border-bottom-color: #4CAF50;
+      }
+
+      header {
+        flex-direction: column;
+        gap: 15px;
+        align-items: flex-start;
+      }
+
+      .header-controls {
+        width: 100%;
+        justify-content: space-between;
+      }
+
+      .search-bar input {
+        width: 150px;
+      }
+
+      .data-table {
+        display: block;
+        overflow-x: auto;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <aside class="sidebar">
+      <div class="logo-area">
+        <div class="logo">
+          <i class="fas fa-hotel"></i>
+          <span>宿舍管理系统</span>
+        </div>
+        <div class="campus-info">四川工商学院学生宿舍管理中心</div>
+      </div>
+      <ul class="nav-links">
+        <li><a href="index.html"><i class="fas fa-home"></i><span>系统首页</span></a></li>
+        <li><a href="dorm-management.html"><i class="fas fa-building"></i><span>宿舍楼管理</span></a></li>
+        <li><a href="student.html"><i class="fas fa-user-friends"></i><span>住宿学生</span></a></li>
+        <li><a href="bed-assignment.html"><i class="fas fa-bed"></i><span>床位分配</span></a></li>
+        <li><a href="repair.html"><i class="fas fa-tools"></i><span>报修管理</span></a></li>
+        <li><a href="visitor.html"><i class="fas fa-user-check"></i><span>访客登记</span></a></li>
+        <li><a href="statistics.html"><i class="fas fa-chart-bar"></i><span>数据统计</span></a></li>
+        <li><a href="settings.html" class="active"><i class="fas fa-cog"></i><span>系统设置</span></a></li>
+        </li>
+      </ul>
+    </aside>
+
+    <main class="main-content">
+      <header>
+        <div class="header-title">
+          <h1>系统设置</h1>
+          <p>系统参数配置、用户管理和维护工具</p>
+        </div>
+        <div class="header-controls">
+          <div class="search-bar">
+            <i class="fas fa-search"></i>
+            <input type="text" placeholder="搜索设置项..." id="settingsSearch">
+          </div>
+          <div class="user-info">
+            <div class="user-avatar">
+              <i class="fas fa-user-tie"></i>
+            </div>
+            <div class="user-details">
+              <h3>李管理员</h3>
+              <p>系统管理员</p>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <div class="settings-container">
+        <div class="settings-sidebar">
+          <h3 style="margin-bottom: 20px;">设置菜单</h3>
+          <ul class="settings-menu">
+            <li><a href="#" class="active" onclick="showSection('user')"><i class="fas fa-users-cog"></i> 用户管理</a></li>
+            <li><a href="#" onclick="showSection('system')"><i class="fas fa-sliders-h"></i> 系统参数</a></li>
+            <li><a href="#" onclick="showSection('security')"><i class="fas fa-shield-alt"></i> 安全设置</a></li>
+            <li><a href="#" onclick="showSection('backup')"><i class="fas fa-database"></i> 数据备份</a></li>
+            <li><a href="#" onclick="showSection('logs')"><i class="fas fa-clipboard-list"></i> 系统日志</a></li>
+            <li><a href="#" onclick="showSection('about')"><i class="fas fa-info-circle"></i> 关于系统</a></li>
+          </ul>
+
+          <div style="margin-top: 30px; padding: 15px; background: #f0f9ff; border-radius: 8px;">
+            <h4>系统状态</h4>
+            <p style="font-size: 14px; color: #64748b; margin-top: 8px;">
+              <i class="fas fa-circle" style="color: #10b981;"></i> 运行正常<br>
+              <i class="fas fa-database" style="color: #3b82f6;"></i> 存储: <span id="storageUsage">1.2GB/10GB</span><br>
+              <i class="fas fa-users" style="color: #f59e0b;"></i> 在线用户: <span id="onlineUsers">3</span>
+            </p>
+          </div>
+        </div>
+
+        <div class="settings-content">
+          <!-- 用户管理 -->
+          <div id="user-section" class="settings-section active">
+            <div class="setting-item">
+              <div class="setting-title">用户管理
+                <button class="btn btn-primary btn-sm" style="float: right;" onclick="addNewUser()">添加用户</button>
+              </div>
+              <div class="setting-description">管理系统用户账户和权限设置</div>
+
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>用户名</th>
+                    <th>姓名</th>
+                    <th>角色</th>
+                    <th>部门</th>
+                    <th>最后登录</th>
+                    <th>状态</th>
+                    <th>操作</th>
+                  </tr>
+                </thead>
+                <tbody id="userTableBody">
+                  <!-- 用户数据由JavaScript动态生成 -->
+                </tbody>
+              </table>
+            </div>
+
+            <div class="setting-item">
+              <div class="setting-title">角色权限管理</div>
+              <div class="setting-description">配置不同角色的系统访问权限</div>
+
+              <div
+                style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 15px; margin-top: 15px;">
+                <div style="background: #f8fafc; padding: 15px; border-radius: 8px;">
+                  <h5>系统管理员</h5>
+                  <p style="font-size: 13px; color: #64748b; margin-top: 5px;">
+                    <i class="fas fa-check" style="color: #10b981;"></i> 所有权限<br>
+                    <i class="fas fa-check" style="color: #10b981;"></i> 用户管理<br>
+                    <i class="fas fa-check" style="color: #10b981;"></i> 系统设置
+                  </p>
+                  <button class="btn btn-sm btn-warning" onclick="editRole('admin')">编辑权限</button>
+                </div>
+                <div style="background: #f8fafc; padding: 15px; border-radius: 8px;">
+                  <h5>宿舍管理员</h5>
+                  <p style="font-size: 13px; color: #64748b; margin-top: 5px;">
+                    <i class="fas fa-check" style="color: #10b981;"></i> 学生管理<br>
+                    <i class="fas fa-check" style="color: #10b981;"></i> 床位分配<br>
+                    <i class="fas fa-times" style="color: #ef4444;"></i> 系统设置
+                  </p>
+                  <button class="btn btn-sm btn-warning" onclick="editRole('dorm')">编辑权限</button>
+                </div>
+                <div style="background: #f8fafc; padding: 15px; border-radius: 8px;">
+                  <h5>访客管理员</h5>
+                  <p style="font-size: 13px; color: #64748b; margin-top: 5px;">
+                    <i class="fas fa-check" style="color: #10b981;"></i> 访客登记<br>
+                    <i class="fas fa-times" style="color: #ef4444;"></i> 学生管理<br>
+                    <i class="fas fa-times" style="color: #ef4444;"></i> 系统设置
+                  </p>
+                  <button class="btn btn-sm btn-warning" onclick="editRole('visitor')">编辑权限</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 系统参数 -->
+          <div id="system-section" class="settings-section">
+            <div class="setting-item">
+              <div class="setting-title">系统基本设置</div>
+              <div class="setting-description">配置系统基本运行参数</div>
+
+              <div class="form-group">
+                <label>系统名称</label>
+                <input type="text" class="form-control" id="systemName" value="宿舍管理系统">
+              </div>
+
+              <div class="form-group">
+                <label>机构名称</label>
+                <input type="text" class="form-control" id="orgName" value="四川工商学院学生宿舍管理中心">
+              </div>
+
+              <div class="form-group">
+                <label>系统时区</label>
+                <select class="form-control" id="timezone">
+                  <option value="UTC+8" selected>中国标准时间 (UTC+8)</option>
+                  <option value="UTC+0">格林威治标准时间 (UTC+0)</option>
+                  <option value="UTC-5">美国东部时间 (UTC-5)</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label>日期格式</label>
+                <select class="form-control" id="dateFormat">
+                  <option value="YYYY-MM-DD" selected>YYYY-MM-DD</option>
+                  <option value="YYYY/MM/DD">YYYY/MM/DD</option>
+                  <option value="DD-MM-YYYY">DD-MM-YYYY</option>
+                </select>
+              </div>
+
+              <button class="btn btn-primary" onclick="saveSystemSettings()">保存设置</button>
+            </div>
+
+            <div class="setting-item">
+              <div class="setting-title">功能开关</div>
+              <div class="setting-description">启用或禁用系统功能模块</div>
+
+              <div class="function-switch">
+                <div class="switch-item">
+                  <div>
+                    <strong>访客登记功能</strong><br>
+                    <small style="color: #64748b;">启用后可以登记和管理访客信息</small>
+                  </div>
+                  <label class="switch">
+                    <input type="checkbox" id="visitorFunction" checked>
+                    <span class="slider"></span>
+                  </label>
+                </div>
+
+                <div class="switch-item">
+                  <div>
+                    <strong>报修管理功能</strong><br>
+                    <small style="color: #64748b;">启用后可以提交和处理报修申请</small>
+                  </div>
+                  <label class="switch">
+                    <input type="checkbox" id="repairFunction" checked>
+                    <span class="slider"></span>
+                  </label>
+                </div>
+
+                <div class="switch-item">
+                  <div>
+                    <strong>数据统计功能</strong><br>
+                    <small style="color: #64748b;">启用后可以查看数据统计和分析</small>
+                  </div>
+                  <label class="switch">
+                    <input type="checkbox" id="statsFunction" checked>
+                    <span class="slider"></span>
+                  </label>
+                </div>
+
+                <div class="switch-item">
+                  <div>
+                    <strong>短信通知功能</strong><br>
+                    <small style="color: #64748b;">启用后可以发送短信通知</small>
+                  </div>
+                  <label class="switch">
+                    <input type="checkbox" id="smsFunction">
+                    <span class="slider"></span>
+                  </label>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 安全设置 -->
+          <div id="security-section" class="settings-section">
+            <div class="setting-item">
+              <div class="setting-title">密码安全设置</div>
+              <div class="setting-description">配置密码策略和安全选项</div>
+
+              <div class="form-group">
+                <label>密码最小长度</label>
+                <input type="number" class="form-control" id="minPasswordLength" value="8" min="6" max="20">
+              </div>
+
+              <div class="form-group">
+                <label>密码有效期（天）</label>
+                <input type="number" class="form-control" id="passwordExpiry" value="90" min="30" max="365">
+                <small style="color: #64748b;">密码过期后需要强制修改</small>
+              </div>
+
+              <div style="margin: 15px 0;">
+                <strong>密码复杂度要求</strong>
+                <div style="margin-top: 10px;">
+                  <label><input type="checkbox" id="requireNumber" checked> 必须包含数字</label><br>
+                  <label><input type="checkbox" id="requireUppercase" checked> 必须包含大写字母</label><br>
+                  <label><input type="checkbox" id="requireSpecial"> 必须包含特殊字符</label><br>
+                  <label><input type="checkbox" id="excludeUsername"> 不能包含用户名</label>
+                </div>
+              </div>
+
+              <div style="margin: 15px 0;">
+                <strong>登录安全设置</strong>
+                <div style="margin-top: 10px;">
+                  <label><input type="checkbox" id="enableCaptcha" checked> 启用登录验证码</label><br>
+                  <label><input type="checkbox" id="enable2FA"> 启用双因素认证</label><br>
+                  <label><input type="checkbox" id="enableLoginLog" checked> 记录登录日志</label><br>
+                  <label><input type="checkbox" id="restrictIP"> 限制登录IP地址</label>
+                </div>
+              </div>
+
+              <button class="btn btn-primary" onclick="saveSecuritySettings()">保存安全设置</button>
+            </div>
+
+            <div class="setting-item">
+              <div class="setting-title">修改登录密码</div>
+              <div class="setting-description">修改当前用户的登录密码</div>
+
+              <div class="form-group">
+                <label>当前密码</label>
+                <input type="password" class="form-control" id="currentPassword" placeholder="请输入当前密码">
+              </div>
+
+              <div class="form-group">
+                <label>新密码</label>
+                <input type="password" class="form-control" id="newPassword" placeholder="请输入新密码"
+                  oninput="checkPasswordStrength(this.value)">
+                <div class="password-strength">
+                  <div class="strength-meter" id="passwordStrength"></div>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label>确认新密码</label>
+                <input type="password" class="form-control" id="confirmPassword" placeholder="请再次输入新密码">
+              </div>
+
+              <button class="btn btn-primary" onclick="changePassword()">修改密码</button>
+            </div>
+          </div>
+
+          <!-- 数据备份 -->
+          <div id="backup-section" class="settings-section">
+            <div class="setting-item">
+              <div class="setting-title">数据备份设置</div>
+              <div class="setting-description">配置自动备份策略和手动备份</div>
+
+              <div style="margin: 15px 0;">
+                <strong>自动备份设置</strong>
+                <div style="margin-top: 10px;">
+                  <label><input type="checkbox" id="autoBackup" checked> 启用自动备份</label><br>
+                  <div style="margin: 10px 0 0 20px;">
+                    <label>备份频率：</label>
+                    <select class="form-control" style="width: auto; display: inline-block;" id="backupFrequency">
+                      <option value="daily">每天</option>
+                      <option value="weekly" selected>每周</option>
+                      <option value="monthly">每月</option>
+                    </select><br>
+
+                    <label style="margin-top: 10px; display: inline-block;">备份时间：</label>
+                    <input type="time" class="form-control" style="width: auto; display: inline-block;" id="backupTime"
+                      value="02:00">
+                  </div>
+                </div>
+              </div>
+
+              <div style="margin: 15px 0;">
+                <strong>备份保留策略</strong>
+                <div style="margin-top: 10px;">
+                  <label>保留最近备份：</label>
+                  <select class="form-control" style="width: auto; display: inline-block;" id="backupRetention">
+                    <option value="7">7天</option>
+                    <option value="30" selected>30天</option>
+                    <option value="90">90天</option>
+                    <option value="180">180天</option>
+                  </select>
+                </div>
+              </div>
+
+              <div style="margin: 15px 0;">
+                <strong>手动备份</strong>
+                <div style="margin-top: 10px;">
+                  <button class="btn btn-primary" onclick="manualBackup()">
+                    <i class="fas fa-save"></i> 立即备份
+                  </button>
+                  <button class="btn btn-warning" onclick="restoreBackup()" style="margin-left: 10px;">
+                    <i class="fas fa-undo"></i> 恢复备份
+                  </button>
+                </div>
+              </div>
+
+              <div style="margin: 15px 0;">
+                <strong>备份文件列表</strong>
+                <div style="margin-top: 10px;" id="backupList">
+                  <!-- 备份列表由JavaScript动态生成 -->
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 系统日志 -->
+          <div id="logs-section" class="settings-section">
+            <div class="setting-item">
+              <div class="setting-title">系统日志查看</div>
+              <div class="setting-description">查看系统操作日志和错误日志</div>
+
+              <div style="margin-bottom: 15px;">
+                <select class="form-control" style="width: 200px; display: inline-block;" id="logFilter"
+                  onchange="filterLogs()">
+                  <option value="all">全部日志</option>
+                  <option value="login">登录日志</option>
+                  <option value="operation">操作日志</option>
+                  <option value="error">错误日志</option>
+                  <option value="system">系统日志</option>
+                </select>
+
+                <button class="btn btn-primary" style="margin-left: 10px;" onclick="exportLogs()">
+                  <i class="fas fa-download"></i> 导出日志
+                </button>
+
+                <button class="btn btn-danger" style="margin-left: 10px;" onclick="clearLogs()">
+                  <i class="fas fa-trash"></i> 清空日志
+                </button>
+              </div>
+
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>时间</th>
+                    <th>用户</th>
+                    <th>操作类型</th>
+                    <th>操作内容</th>
+                    <th>IP地址</th>
+                    <th>状态</th>
+                  </tr>
+                </thead>
+                <tbody id="logsTableBody">
+                  <!-- 日志数据由JavaScript动态生成 -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- 关于系统 -->
+          <div id="about-section" class="settings-section">
+            <div class="setting-item">
+              <div class="setting-title">系统信息</div>
+              <div class="setting-description">查看系统版本信息和运行状态</div>
+
+              <div class="system-info">
+                <div class="info-item">
+                  <span>系统名称</span>
+                  <span>宿舍管理系统</span>
+                </div>
+                <div class="info-item">
+                  <span>系统版本</span>
+                  <span id="systemVersion">v2.1.0</span>
+                </div>
+                <div class="info-item">
+                  <span>开发团队</span>
+                  <span>四川工商学院信息中心</span>
+                </div>
+                <div class="info-item">
+                  <span>最后更新</span>
+                  <span>2023-10-01</span>
+                </div>
+                <div class="info-item">
+                  <span>数据库版本</span>
+                  <span>MySQL 8.0</span>
+                </div>
+                <div class="info-item">
+                  <span>服务器环境</span>
+                  <span>Apache 2.4 + PHP 7.4</span>
+                </div>
+                <div class="info-item">
+                  <span>系统语言</span>
+                  <span>中文 (简体)</span>
+                </div>
+                <div class="info-item">
+                  <span>技术支持</span>
+                  <span>support@campus.edu.cn</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="setting-item">
+              <div class="setting-title">系统维护</div>
+              <div class="setting-description">系统维护和故障排除工具</div>
+
+              <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; margin-top: 15px;">
+                <button class="btn btn-primary" onclick="clearCache()">
+                  <i class="fas fa-broom"></i> 清理缓存
+                </button>
+                <button class="btn btn-warning" onclick="optimizeDatabase()">
+                  <i class="fas fa-tachometer-alt"></i> 优化数据库
+                </button>
+                <button class="btn btn-success" onclick="checkSystemHealth()">
+                  <i class="fas fa-heartbeat"></i> 系统健康检查
+                </button>
+                <button class="btn btn-danger" onclick="systemUpdate()">
+                  <i class="fas fa-sync-alt"></i> 检查更新
+                </button>
+              </div>
+
+              <div style="margin-top: 20px; padding: 15px; background: #fef3c7; border-radius: 8px;">
+                <h5><i class="fas fa-exclamation-triangle" style="color: #d97706;"></i> 高级选项</h5>
+                <p style="font-size: 14px; color: #92400e; margin-top: 8px;">
+                  以下操作需要谨慎执行：
+                </p>
+                <button class="btn btn-danger" onclick="resetSystem()" style="margin-top: 10px;">
+                  <i class="fas fa-redo"></i> 重置系统
+                </button>
+                <button class="btn btn-danger" onclick="uninstallSystem()" style="margin-left: 10px;">
+                  <i class="fas fa-trash"></i> 卸载系统
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <footer class="footer">
+        <p>© 2023 四川工商学院宿舍管理中心. 版权所有. 系统版本: <span id="footerVersion">2.1.0</span></p>
+        <p style="margin-top: 8px;">系统运行时间: <span id="uptime">15天 3小时 28分钟</span></p>
+      </footer>
+    </main>
+  </div>
+
+  <script>
+    // 模拟数据
+    const systemData = {
+      users: [
+        { id: 1, username: 'admin', name: '李管理员', role: '系统管理员', department: '宿舍管理中心', lastLogin: '2023-10-15 14:20', status: '在线' },
+        { id: 2, username: 'zhangli', name: '张丽', role: '宿舍管理员', department: '1号楼管理部', lastLogin: '2023-10-15 10:30', status: '在线' },
+        { id: 3, username: 'wanggang', name: '王刚', role: '维修管理员', department: '维修部', lastLogin: '2023-10-14 16:45', status: '离线' },
+        { id: 4, username: 'liufang', name: '刘芳', role: '访客管理员', department: '门卫部', lastLogin: '2023-10-15 08:15', status: '在线' },
+        { id: 5, username: 'chenhua', name: '陈华', role: '数据管理员', department: '数据中心', lastLogin: '2023-10-14 09:20', status: '离线' }
+      ],
+      logs: [
+        { id: 1, time: '2023-10-15 14:20', user: 'admin', type: '登录', content: '用户登录系统', ip: '192.168.1.100', status: '成功' },
+        { id: 2, time: '2023-10-15 14:25', user: 'admin', type: '修改', content: '修改学生信息', ip: '192.168.1.100', status: '成功' },
+        { id: 3, time: '2023-10-15 14:30', user: 'admin', type: '设置', content: '修改系统参数', ip: '192.168.1.100', status: '成功' },
+        { id: 4, time: '2023-10-15 10:30', user: 'zhangli', type: '查询', content: '查看宿舍楼信息', ip: '192.168.1.101', status: '成功' },
+        { id: 5, time: '2023-10-14 16:45', user: 'wanggang', type: '登录', content: '登录失败（密码错误）', ip: '192.168.1.102', status: '失败' },
+        { id: 6, time: '2023-10-14 16:46', user: 'wanggang', type: '登录', content: '用户登录系统', ip: '192.168.1.102', status: '成功' },
+        { id: 7, time: '2023-10-14 16:50', user: 'wanggang', type: '报修', content: '处理报修申请', ip: '192.168.1.102', status: '成功' },
+        { id: 8, time: '2023-10-15 08:15', user: 'liufang', type: '访客', content: '登记访客信息', ip: '192.168.1.103', status: '成功' },
+        { id: 9, time: '2023-10-15 09:20', user: 'chenhua', type: '数据', content: '导出统计数据', ip: '192.168.1.104', status: '成功' },
+        { id: 10, time: '2023-10-15 11:30', user: 'admin', type: '备份', content: '执行数据备份', ip: '192.168.1.100', status: '成功' }
+      ],
+      backups: [
+        { id: 1, name: 'backup_20231015.zip', time: '2023-10-15 02:00', status: '成功', size: '245MB' },
+        { id: 2, name: 'backup_20231008.zip', time: '2023-10-08 02:00', status: '成功', size: '238MB' },
+        { id: 3, name: 'backup_20231001.zip', time: '2023-10-01 02:00', status: '失败', size: '0MB', error: '磁盘空间不足' },
+        { id: 4, name: 'backup_20230924.zip', time: '2023-09-24 02:00', status: '成功', size: '230MB' },
+        { id: 5, name: 'backup_20230917.zip', time: '2023-09-17 02:00', status: '成功', size: '225MB' }
+      ],
+      systemSettings: {
+        name: '宿舍管理系统',
+        orgName: '四川工商学院学生宿舍管理中心',
+        timezone: 'UTC+8',
+        dateFormat: 'YYYY-MM-DD',
+        features: {
+          visitor: true,
+          repair: true,
+          statistics: true,
+          sms: false
+        },
+        security: {
+          minPasswordLength: 8,
+          passwordExpiry: 90,
+          requireNumber: true,
+          requireUppercase: true,
+          requireSpecial: false,
+          excludeUsername: false,
+          enableCaptcha: true,
+          enable2FA: false,
+          enableLoginLog: true,
+          restrictIP: false
+        },
+        backup: {
+          autoBackup: true,
+          frequency: 'weekly',
+          time: '02:00',
+          retention: 30
+        }
+      }
+    };
+
+    // 初始化
+    document.addEventListener('DOMContentLoaded', function () {
+      initPage();
+    });
+
+    // 页面初始化
+    function initPage() {
+      // 加载用户数据
+      renderUserTable();
+
+      // 加载日志数据
+      renderLogsTable();
+
+      // 加载备份数据
+      renderBackupList();
+
+      // 加载系统设置
+      loadSystemSettings();
+
+      // 初始化搜索功能
+      initSearch();
+
+      // 更新系统状态
+      updateSystemStatus();
+    }
+
+    // 导航函数
+    function navigateTo(page) {
+      // 移除所有active类
+      document.querySelectorAll('.nav-links a').forEach(link => {
+        link.classList.remove('active');
+      });
+
+      // 添加当前页面active类
+      event.target.classList.add('active');
+
+      // 更新页面标题
+      const pageTitles = {
+        'home': '系统首页',
+        'dorm': '宿舍楼管理',
+        'student': '住宿学生',
+        'bed': '床位分配',
+        'repair': '报修管理',
+        'visitor': '访客登记',
+        'statistics': '数据统计',
+        'settings': '系统设置'
+      };
+
+      document.querySelector('h1').textContent = pageTitles[page] || '宿舍管理系统';
+      document.querySelector('.header-title p').textContent = page === 'settings' ?
+        '系统参数配置、用户管理和维护工具' : `${pageTitles[page]}页面`;
+
+      // 在实际应用中，这里会加载对应页面的内容
+      alert(`即将跳转到${pageTitles[page]}，这里是模拟跳转`);
+
+      // 如果是当前页面，保持原样
+      if (page === 'settings') {
+        return false; // 阻止默认行为
+      }
+    }
+
+    // 显示设置部分
+    function showSection(sectionId) {
+      // 更新菜单项样式
+      document.querySelectorAll('.settings-menu a').forEach(link => {
+        link.classList.remove('active');
+      });
+      event.target.classList.add('active');
+
+      // 隐藏所有部分
+      document.querySelectorAll('.settings-section').forEach(section => {
+        section.classList.remove('active');
+      });
+
+      // 显示目标部分
+      document.getElementById(`${sectionId}-section`).classList.add('active');
+    }
+
+    // 渲染用户表格
+    function renderUserTable() {
+      const tbody = document.getElementById('userTableBody');
+      tbody.innerHTML = '';
+
+      systemData.users.forEach(user => {
+        const row = document.createElement('tr');
+
+        // 根据角色设置权限标签
+        let roleTag = '';
+        if (user.role === '系统管理员') roleTag = '<span class="user-role">最高权限</span>';
+        else if (user.role === '宿舍管理员') roleTag = '<span class="user-role">普通权限</span>';
+        else if (user.role === '维修管理员') roleTag = '<span class="user-role">维修权限</span>';
+        else if (user.role === '访客管理员') roleTag = '<span class="user-role">访客权限</span>';
+        else roleTag = '<span class="user-role">数据权限</span>';
+
+        // 设置状态标签
+        const statusClass = user.status === '在线' ? 'status-completed' : 'status-pending';
+
+        row.innerHTML = `
+                    <td><strong>${user.username}</strong></td>
+                    <td>${user.name}</td>
+                    <td>${user.role} ${roleTag}</td>
+                    <td>${user.department}</td>
+                    <td>${user.lastLogin}</td>
+                    <td><span class="status ${statusClass}">${user.status}</span></td>
+                    <td>
+                        <button class="btn btn-warning btn-sm" onclick="editUser('${user.username}')">编辑</button>
+                        ${user.username !== 'admin' ? `<button class="btn btn-danger btn-sm" onclick="deleteUser('${user.username}')">删除</button>` : ''}
+                    </td>
+                `;
+        tbody.appendChild(row);
+      });
+    }
+
+    // 渲染日志表格
+    function renderLogsTable() {
+      const tbody = document.getElementById('logsTableBody');
+      tbody.innerHTML = '';
+
+      systemData.logs.forEach(log => {
+        const row = document.createElement('tr');
+        const statusClass = log.status === '成功' ? 'status-completed' : 'status-pending';
+
+        row.innerHTML = `
+                    <td>${log.time}</td>
+                    <td>${log.user}</td>
+                    <td>${log.type}</td>
+                    <td>${log.content}</td>
+                    <td>${log.ip}</td>
+                    <td><span class="status ${statusClass}">${log.status}</span></td>
+                `;
+        tbody.appendChild(row);
+      });
+    }
+
+    // 渲染备份列表
+    function renderBackupList() {
+      const container = document.getElementById('backupList');
+      container.innerHTML = '';
+
+      systemData.backups.forEach(backup => {
+        const statusClass = backup.status === '成功' ? 'backup-success' : 'backup-failed';
+        const statusText = backup.status === '失败' ? `${backup.status} - ${backup.error}` : backup.status;
+
+        container.innerHTML += `
+                    <div class="backup-status">
+                        <i class="fas fa-file-archive"></i>
+                        <div style="flex: 1;">
+                            <div><strong>${backup.name}</strong> (${backup.size})</div>
+                            <div class="${statusClass}">${backup.time} | ${statusText}</div>
+                        </div>
+                        ${backup.status === '成功' ? `<button class="btn btn-sm btn-primary" onclick="downloadBackup('${backup.name}')">下载</button>` : ''}
+                    </div>
+                `;
+      });
+    }
+
+    // 加载系统设置
+    function loadSystemSettings() {
+      const settings = systemData.systemSettings;
+
+      // 基本设置
+      document.getElementById('systemName').value = settings.name;
+      document.getElementById('orgName').value = settings.orgName;
+      document.getElementById('timezone').value = settings.timezone;
+      document.getElementById('dateFormat').value = settings.dateFormat;
+
+      // 功能开关
+      document.getElementById('visitorFunction').checked = settings.features.visitor;
+      document.getElementById('repairFunction').checked = settings.features.repair;
+      document.getElementById('statsFunction').checked = settings.features.statistics;
+      document.getElementById('smsFunction').checked = settings.features.sms;
+
+      // 安全设置
+      const sec = settings.security;
+      document.getElementById('minPasswordLength').value = sec.minPasswordLength;
+      document.getElementById('passwordExpiry').value = sec.passwordExpiry;
+      document.getElementById('requireNumber').checked = sec.requireNumber;
+      document.getElementById('requireUppercase').checked = sec.requireUppercase;
+      document.getElementById('requireSpecial').checked = sec.requireSpecial;
+      document.getElementById('excludeUsername').checked = sec.excludeUsername;
+      document.getElementById('enableCaptcha').checked = sec.enableCaptcha;
+      document.getElementById('enable2FA').checked = sec.enable2FA;
+      document.getElementById('enableLoginLog').checked = sec.enableLoginLog;
+      document.getElementById('restrictIP').checked = sec.restrictIP;
+
+      // 备份设置
+      const backup = settings.backup;
+      document.getElementById('autoBackup').checked = backup.autoBackup;
+      document.getElementById('backupFrequency').value = backup.frequency;
+      document.getElementById('backupTime').value = backup.time;
+      document.getElementById('backupRetention').value = backup.retention;
+    }
+
+    // 初始化搜索功能
+    function initSearch() {
+      const searchInput = document.getElementById('settingsSearch');
+      searchInput.addEventListener('input', function (e) {
+        const searchTerm = e.target.value.toLowerCase();
+
+        // 根据当前显示的部分进行搜索
+        const activeSection = document.querySelector('.settings-section.active').id;
+
+        if (activeSection === 'user-section') {
+          searchUsers(searchTerm);
+        } else if (activeSection === 'logs-section') {
+          searchLogs(searchTerm);
+        }
+      });
+    }
+
+    // 搜索用户
+    function searchUsers(term) {
+      const rows = document.querySelectorAll('#userTableBody tr');
+      rows.forEach(row => {
+        const text = row.textContent.toLowerCase();
+        row.style.display = text.includes(term) ? '' : 'none';
+      });
+    }
+
+    // 搜索日志
+    function searchLogs(term) {
+      const rows = document.querySelectorAll('#logsTableBody tr');
+      rows.forEach(row => {
+        const text = row.textContent.toLowerCase();
+        row.style.display = text.includes(term) ? '' : 'none';
+      });
+    }
+
+    // 更新系统状态
+    function updateSystemStatus() {
+      // 模拟更新存储使用情况
+      const used = (1.2 + Math.random() * 0.1).toFixed(1);
+      document.getElementById('storageUsage').textContent = `${used}GB/10GB`;
+
+      // 模拟更新在线用户数
+      const online = Math.floor(Math.random() * 2) + 3; // 3-4个在线用户
+      document.getElementById('onlineUsers').textContent = online;
+
+      // 更新运行时间
+      const startTime = new Date('2023-10-01T08:00:00');
+      const now = new Date();
+      const diff = now - startTime;
+      const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+
+      document.getElementById('uptime').textContent = `${days}天 ${hours}小时 ${minutes}分钟`;
+    }
+
+    // 添加新用户
+    function addNewUser() {
+      showModal('添加新用户', `
+                <div class="form-group">
+                    <label>用户名 *</label>
+                    <input type="text" class="form-control" id="newUsername" placeholder="请输入用户名" required>
+                </div>
+                <div class="form-group">
+                    <label>姓名 *</label>
+                    <input type="text" class="form-control" id="newName" placeholder="请输入姓名" required>
+                </div>
+                <div class="form-group">
+                    <label>密码 *</label>
+                    <input type="password" class="form-control" id="newPassword" placeholder="请输入密码" required>
+                </div>
+                <div class="form-group">
+                    <label>角色 *</label>
+                    <select class="form-control" id="newRole" required>
+                        <option value="">请选择角色</option>
+                        <option value="系统管理员">系统管理员</option>
+                        <option value="宿舍管理员">宿舍管理员</option>
+                        <option value="维修管理员">维修管理员</option>
+                        <option value="访客管理员">访客管理员</option>
+                        <option value="数据管理员">数据管理员</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>部门</label>
+                    <input type="text" class="form-control" id="newDepartment" placeholder="请输入部门">
+                </div>
+            `, function () {
+        const username = document.getElementById('newUsername').value;
+        const name = document.getElementById('newName').value;
+        const password = document.getElementById('newPassword').value;
+        const role = document.getElementById('newRole').value;
+        const department = document.getElementById('newDepartment').value;
+
+        if (!username || !name || !password || !role) {
+          alert('请填写所有必填字段！');
+          return false;
+        }
+
+        // 检查用户名是否已存在
+        const exists = systemData.users.find(u => u.username === username);
+        if (exists) {
+          alert('用户名已存在，请使用其他用户名！');
+          return false;
+        }
+
+        // 添加新用户
+        const newUser = {
+          id: systemData.users.length + 1,
+          username,
+          name,
+          role,
+          department: department || '未分配',
+          lastLogin: '从未登录',
+          status: '离线'
+        };
+
+        systemData.users.push(newUser);
+        renderUserTable();
+        alert('用户添加成功！');
+        return true;
+      });
+    }
+
+    // 编辑用户
+    function editUser(username) {
+      const user = systemData.users.find(u => u.username === username);
+      if (!user) return;
+
+      showModal('编辑用户', `
+                <div class="form-group">
+                    <label>用户名</label>
+                    <input type="text" class="form-control" value="${user.username}" readonly>
+                    <small style="color: #64748b;">用户名不能修改</small>
+                </div>
+                <div class="form-group">
+                    <label>姓名 *</label>
+                    <input type="text" class="form-control" id="editName" value="${user.name}" required>
+                </div>
+                <div class="form-group">
+                    <label>角色 *</label>
+                    <select class="form-control" id="editRole" required>
+                        <option value="系统管理员" ${user.role === '系统管理员' ? 'selected' : ''}>系统管理员</option>
+                        <option value="宿舍管理员" ${user.role === '宿舍管理员' ? 'selected' : ''}>宿舍管理员</option>
+                        <option value="维修管理员" ${user.role === '维修管理员' ? 'selected' : ''}>维修管理员</option>
+                        <option value="访客管理员" ${user.role === '访客管理员' ? 'selected' : ''}>访客管理员</option>
+                        <option value="数据管理员" ${user.role === '数据管理员' ? 'selected' : ''}>数据管理员</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>部门</label>
+                    <input type="text" class="form-control" id="editDepartment" value="${user.department}">
+                </div>
+                <div class="form-group">
+                    <label>重置密码</label>
+                    <input type="password" class="form-control" id="resetPassword" placeholder="留空表示不修改密码">
+                </div>
+            `, function () {
+        user.name = document.getElementById('editName').value;
+        user.role = document.getElementById('editRole').value;
+        user.department = document.getElementById('editDepartment').value;
+
+        const newPassword = document.getElementById('resetPassword').value;
+        if (newPassword) {
+          // 在实际应用中，这里会加密密码并保存
+          alert('密码已重置');
+        }
+
+        renderUserTable();
+        alert('用户信息更新成功！');
+        return true;
+      });
+    }
+
+    // 删除用户
+    function deleteUser(username) {
+      if (username === 'admin') {
+        alert('不能删除系统管理员账户！');
+        return;
+      }
+
+      if (confirm(`确定要删除用户 "${username}" 吗？此操作不可撤销。`)) {
+        const index = systemData.users.findIndex(u => u.username === username);
+        if (index !== -1) {
+          systemData.users.splice(index, 1);
+          renderUserTable();
+          alert('用户删除成功！');
+        }
+      }
+    }
+
+    // 编辑角色权限
+    function editRole(roleType) {
+      const roleNames = {
+        'admin': '系统管理员',
+        'dorm': '宿舍管理员',
+        'visitor': '访客管理员'
+      };
+
+      showModal(`编辑${roleNames[roleType]}权限`, `
+                <div class="form-group">
+                    <label>角色名称</label>
+                    <input type="text" class="form-control" value="${roleNames[roleType]}" readonly>
+                </div>
+                <div style="margin: 15px 0;">
+                    <strong>权限设置</strong>
+                    <div style="margin-top: 10px;">
+                        <label><input type="checkbox" checked> 用户管理权限</label><br>
+                        <label><input type="checkbox" ${roleType === 'admin' ? 'checked' : ''}> 系统设置权限</label><br>
+                        <label><input type="checkbox" checked> 学生管理权限</label><br>
+                        <label><input type="checkbox" checked> 床位分配权限</label><br>
+                        <label><input type="checkbox" ${roleType === 'visitor' ? 'checked' : ''}> 访客登记权限</label><br>
+                        <label><input type="checkbox" ${roleType === 'admin' || roleType === 'dorm' ? 'checked' : ''}> 报修管理权限</label><br>
+                        <label><input type="checkbox" ${roleType === 'admin' ? 'checked' : ''}> 数据统计权限</label><br>
+                        <label><input type="checkbox"> 数据导出权限</label>
+                    </div>
+                </div>
+            `, function () {
+        alert('角色权限更新成功！');
+        return true;
+      });
+    }
+
+    // 保存系统设置
+    function saveSystemSettings() {
+      // 更新系统设置数据
+      systemData.systemSettings.name = document.getElementById('systemName').value;
+      systemData.systemSettings.orgName = document.getElementById('orgName').value;
+      systemData.systemSettings.timezone = document.getElementById('timezone').value;
+      systemData.systemSettings.dateFormat = document.getElementById('dateFormat').value;
+
+      // 更新功能开关
+      systemData.systemSettings.features.visitor = document.getElementById('visitorFunction').checked;
+      systemData.systemSettings.features.repair = document.getElementById('repairFunction').checked;
+      systemData.systemSettings.features.statistics = document.getElementById('statsFunction').checked;
+      systemData.systemSettings.features.sms = document.getElementById('smsFunction').checked;
+
+      // 记录日志
+      const newLog = {
+        id: systemData.logs.length + 1,
+        time: new Date().toLocaleString('zh-CN'),
+        user: 'admin',
+        type: '设置',
+        content: '修改系统基本参数',
+        ip: '192.168.1.100',
+        status: '成功'
+      };
+      systemData.logs.unshift(newLog);
+      renderLogsTable();
+
+      alert('系统设置保存成功！');
+    }
+
+    // 保存安全设置
+    function saveSecuritySettings() {
+      // 更新安全设置数据
+      const sec = systemData.systemSettings.security;
+      sec.minPasswordLength = parseInt(document.getElementById('minPasswordLength').value);
+      sec.passwordExpiry = parseInt(document.getElementById('passwordExpiry').value);
+      sec.requireNumber = document.getElementById('requireNumber').checked;
+      sec.requireUppercase = document.getElementById('requireUppercase').checked;
+      sec.requireSpecial = document.getElementById('requireSpecial').checked;
+      sec.excludeUsername = document.getElementById('excludeUsername').checked;
+      sec.enableCaptcha = document.getElementById('enableCaptcha').checked;
+      sec.enable2FA = document.getElementById('enable2FA').checked;
+      sec.enableLoginLog = document.getElementById('enableLoginLog').checked;
+      sec.restrictIP = document.getElementById('restrictIP').checked;
+
+      // 记录日志
+      const newLog = {
+        id: systemData.logs.length + 1,
+        time: new Date().toLocaleString('zh-CN'),
+        user: 'admin',
+        type: '设置',
+        content: '修改安全设置',
+        ip: '192.168.1.100',
+        status: '成功'
+      };
+      systemData.logs.unshift(newLog);
+      renderLogsTable();
+
+      alert('安全设置保存成功！');
+    }
+
+    // 检查密码强度
+    function checkPasswordStrength(password) {
+      const meter = document.getElementById('passwordStrength');
+      let strength = 0;
+
+      if (password.length >= 8) strength++;
+      if (/[A-Z]/.test(password)) strength++;
+      if (/[0-9]/.test(password)) strength++;
+      if (/[^A-Za-z0-9]/.test(password)) strength++;
+
+      meter.className = 'strength-meter';
+      if (password.length === 0) {
+        return;
+      } else if (strength < 2) {
+        meter.classList.add('weak');
+      } else if (strength < 4) {
+        meter.classList.add('medium');
+      } else {
+        meter.classList.add('strong');
+      }
+    }
+
+    // 修改密码
+    function changePassword() {
+      const current = document.getElementById('currentPassword').value;
+      const newPass = document.getElementById('newPassword').value;
+      const confirm = document.getElementById('confirmPassword').value;
+
+      if (!current || !newPass || !confirm) {
+        alert('请填写所有密码字段！');
+        return;
+      }
+
+      if (newPass !== confirm) {
+        alert('新密码和确认密码不一致！');
+        return;
+      }
+
+      if (newPass.length < 8) {
+        alert('新密码长度不能少于8位！');
+        return;
+      }
+
+      // 在实际应用中，这里会验证当前密码并更新密码
+      alert('密码修改成功！请重新登录。');
+
+      // 清空密码字段
+      document.getElementById('currentPassword').value = '';
+      document.getElementById('newPassword').value = '';
+      document.getElementById('confirmPassword').value = '';
+      document.getElementById('passwordStrength').className = 'strength-meter';
+    }
+
+    // 手动备份
+    function manualBackup() {
+      alert('正在执行数据备份...');
+
+      // 模拟备份过程
+      setTimeout(() => {
+        const newBackup = {
+          id: systemData.backups.length + 1,
+          name: `backup_${new Date().toISOString().slice(0, 10).replace(/-/g, '')}.zip`,
+          time: new Date().toLocaleString('zh-CN'),
+          status: '成功',
+          size: `${(Math.random() * 50 + 230).toFixed(0)}MB`
+        };
+
+        systemData.backups.unshift(newBackup);
+        renderBackupList();
+
+        // 记录日志
+        const newLog = {
+          id: systemData.logs.length + 1,
+          time: newBackup.time,
+          user: 'admin',
+          type: '备份',
+          content: '执行手动数据备份',
+          ip: '192.168.1.100',
+          status: '成功'
+        };
+        systemData.logs.unshift(newLog);
+        renderLogsTable();
+
+        alert('数据备份成功！');
+      }, 2000);
+    }
+
+    // 恢复备份
+    function restoreBackup() {
+      showModal('恢复数据备份', `
+                <div class="form-group">
+                    <label>选择备份文件</label>
+                    <select class="form-control" id="restoreFile">
+                        ${systemData.backups.filter(b => b.status === '成功').map(b =>
+        `<option value="${b.name}">${b.name} (${b.time})</option>`
+      ).join('')}
+                    </select>
+                </div>
+                <div style="margin: 15px 0; padding: 10px; background: #fee2e2; border-radius: 5px;">
+                    <i class="fas fa-exclamation-triangle" style="color: #dc2626;"></i>
+                    <strong style="color: #dc2626;">警告：</strong>
+                    <p style="font-size: 13px; color: #7f1d1d; margin-top: 5px;">
+                        恢复备份将覆盖当前所有数据，请谨慎操作！建议先执行备份。
+                    </p>
+                </div>
+                <div class="form-group">
+                    <label>确认操作</label>
+                    <input type="text" class="form-control" id="confirmText" placeholder="请输入'确认恢复'" required>
+                </div>
+            `, function () {
+        const confirmText = document.getElementById('confirmText').value;
+        if (confirmText !== '确认恢复') {
+          alert('请输入正确的确认文字！');
+          return false;
+        }
+
+        alert('正在恢复备份数据...此过程可能需要几分钟时间。');
+        return true;
+      });
+    }
+
+    // 过滤日志
+    function filterLogs() {
+      const filterType = document.getElementById('logFilter').value;
+      const rows = document.querySelectorAll('#logsTableBody tr');
+
+      rows.forEach(row => {
+        if (filterType === 'all') {
+          row.style.display = '';
+        } else {
+          const logType = row.cells[2].textContent;
+          const shouldShow =
+            (filterType === 'login' && (logType === '登录' || logType === '登出')) ||
+            (filterType === 'operation' && (logType === '查询' || logType === '修改' || logType === '添加' || logType === '删除')) ||
+            (filterType === 'error' && row.cells[5].textContent.includes('失败')) ||
+            (filterType === 'system' && (logType === '备份' || logType === '恢复' || logType === '系统'));
+
+          row.style.display = shouldShow ? '' : 'none';
+        }
+      });
+    }
+
+    // 导出日志
+    function exportLogs() {
+      alert('正在导出系统日志...');
+      // 在实际应用中，这里会生成并下载日志文件
+      setTimeout(() => {
+        alert('日志导出成功！文件已下载。');
+      }, 1500);
+    }
+
+    // 清空日志
+    function clearLogs() {
+      if (confirm('确定要清空所有系统日志吗？此操作不可撤销。')) {
+        systemData.logs = [];
+        renderLogsTable();
+        alert('系统日志已清空！');
+      }
+    }
+
+    // 下载备份
+    function downloadBackup(filename) {
+      alert(`正在下载备份文件: ${filename}`);
+      // 在实际应用中，这里会触发文件下载
+    }
+
+    // 清理缓存
+    function clearCache() {
+      alert('正在清理系统缓存...');
+      setTimeout(() => {
+        alert('系统缓存清理完成！');
+      }, 1500);
+    }
+
+    // 优化数据库
+    function optimizeDatabase() {
+      alert('正在优化数据库...');
+      setTimeout(() => {
+        alert('数据库优化完成！');
+      }, 2000);
+    }
+
+    // 系统健康检查
+    function checkSystemHealth() {
+      showModal('系统健康检查', `
+                <div style="margin: 15px 0;">
+                    <div style="display: flex; justify-content: space-between; margin: 10px 0;">
+                        <span>数据库连接</span>
+                        <span style="color: #10b981;"><i class="fas fa-check-circle"></i> 正常</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; margin: 10px 0;">
+                        <span>磁盘空间</span>
+                        <span style="color: #10b981;"><i class="fas fa-check-circle"></i> 充足</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; margin: 10px 0;">
+                        <span>内存使用</span>
+                        <span style="color: #f59e0b;"><i class="fas fa-exclamation-triangle"></i> 中等</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; margin: 10px 0;">
+                        <span>网络连接</span>
+                        <span style="color: #10b981;"><i class="fas fa-check-circle"></i> 正常</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; margin: 10px 0;">
+                        <span>备份状态</span>
+                        <span style="color: #10b981;"><i class="fas fa-check-circle"></i> 正常</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; margin: 10px 0;">
+                        <span>安全状态</span>
+                        <span style="color: #10b981;"><i class="fas fa-check-circle"></i> 安全</span>
+                    </div>
+                </div>
+                <div style="margin-top: 20px; padding: 10px; background: #d1fae5; border-radius: 5px;">
+                    <p style="color: #065f46; font-size: 14px;">
+                        <i class="fas fa-info-circle"></i> 系统整体运行状态良好，建议定期进行数据库优化。
+                    </p>
+                </div>
+            `, null, false);
+    }
+
+    // 检查更新
+    function systemUpdate() {
+      alert('正在检查系统更新...');
+      setTimeout(() => {
+        showModal('系统更新检查', `
+                    <div style="text-align: center; padding: 20px 0;">
+                        <i class="fas fa-check-circle" style="font-size: 48px; color: #10b981;"></i>
+                        <h4 style="margin: 15px 0 10px;">系统已是最新版本</h4>
+                        <p style="color: #64748b;">当前版本: v2.1.0<br>最新版本: v2.1.0</p>
+                    </div>
+                    <div style="margin-top: 20px; padding: 10px; background: #f0f9ff; border-radius: 5px;">
+                        <h5>更新日志</h5>
+                        <ul style="font-size: 13px; color: #64748b; margin-top: 8px;">
+                            <li>v2.1.0 (2023-10-01): 新增数据统计模块</li>
+                            <li>v2.0.2 (2023-09-15): 修复报修管理bug</li>
+                            <li>v2.0.1 (2023-09-01): 优化系统性能</li>
+                        </ul>
+                    </div>
+                `, null, false);
+      }, 1000);
+    }
+
+    // 重置系统
+    function resetSystem() {
+      if (confirm('警告：这将重置所有系统设置到默认状态，但不会删除用户数据。确定要继续吗？')) {
+        alert('系统重置功能需要管理员权限确认。');
+      }
+    }
+
+    // 卸载系统
+    function uninstallSystem() {
+      if (confirm('警告：这将完全卸载系统并删除所有数据！此操作不可撤销！确定要继续吗？')) {
+        showModal('确认卸载系统', `
+                    <div style="text-align: center; padding: 20px 0;">
+                        <i class="fas fa-exclamation-triangle" style="font-size: 48px; color: #dc2626;"></i>
+                        <h4 style="margin: 15px 0 10px; color: #dc2626;">危险操作</h4>
+                        <p style="color: #7f1d1d;">您将要卸载整个宿舍管理系统！</p>
+                    </div>
+                    <div style="margin: 15px 0; padding: 15px; background: #fee2e2; border-radius: 5px;">
+                        <p style="color: #7f1d1d;"><strong>卸载将执行以下操作：</strong></p>
+                        <ul style="color: #7f1d1d; font-size: 13px; margin-top: 8px;">
+                            <li>删除所有学生数据</li>
+                            <li>删除所有宿舍数据</li>
+                            <li>删除所有报修记录</li>
+                            <li>删除所有访客记录</li>
+                            <li>删除所有用户账户</li>
+                            <li>删除所有系统设置</li>
+                        </ul>
+                    </div>
+                    <div class="form-group">
+                        <label>请输入管理员密码确认</label>
+                        <input type="password" class="form-control" id="adminPassword" placeholder="请输入管理员密码" required>
+                    </div>
+                    <div class="form-group">
+                        <label>确认文字</label>
+                        <input type="text" class="form-control" id="uninstallConfirm" placeholder="请输入'我确认要卸载系统'" required>
+                    </div>
+                `, function () {
+          const password = document.getElementById('adminPassword').value;
+          const confirmText = document.getElementById('uninstallConfirm').value;
+
+          if (!password) {
+            alert('请输入管理员密码！');
+            return false;
+          }
+
+          if (confirmText !== '我确认要卸载系统') {
+            alert('请输入正确的确认文字！');
+            return false;
+          }
+
+          alert('系统卸载功能需要额外安全验证，请联系系统管理员。');
+          return true;
+        });
+      }
+    }
+
+    // 显示模态框
+    function showModal(title, content, onConfirm, showConfirm = true) {
+      const modal = document.createElement('div');
+      modal.className = 'modal';
+      modal.id = 'customModal';
+
+      modal.innerHTML = `
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h3>${title}</h3>
+                        <button class="close-btn" onclick="closeModal()">&times;</button>
+                    </div>
+                    <div class="modal-body">
+                        ${content}
+                    </div>
+                    ${showConfirm ? `
+                        <div class="modal-footer" style="margin-top: 20px; text-align: right;">
+                            <button class="btn btn-warning" onclick="closeModal()">取消</button>
+                            <button class="btn btn-primary" onclick="confirmModal()" style="margin-left: 10px;">确定</button>
+                        </div>
+                    ` : ''}
+                </div>
+            `;
+
+      document.body.appendChild(modal);
+      modal.style.display = 'flex';
+
+      // 存储回调函数
+      modal._onConfirm = onConfirm;
+    }
+
+    // 关闭模态框
+    function closeModal() {
+      const modal = document.getElementById('customModal');
+      if (modal) {
+        document.body.removeChild(modal);
+      }
+    }
+
+    // 确认模态框操作
+    function confirmModal() {
+      const modal = document.getElementById('customModal');
+      if (modal._onConfirm) {
+        const result = modal._onConfirm();
+        if (result) {
+          closeModal();
+        }
+      } else {
+        closeModal();
+      }
+    }
+
+    // 定期更新系统状态
+    setInterval(updateSystemStatus, 30000); // 每30秒更新一次
+  </script>
+</body>
+
+</html>
